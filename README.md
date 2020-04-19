@@ -50,11 +50,15 @@ Just follow these steps:
    ```
    cd bgpg
    ```
-3. Build Apps & Docker image:
+3. Install dependencies:
+   ```
+   rush update
+   ```
+4. Build Apps & Docker image:
    ```
    rush build
    ```
-4. Use the provided `docker-compose.yml` file to run the BGPG and MongoDB servers:
+5. Use the provided `docker-compose.yml` file to run the BGPG and MongoDB servers:
    ```
    docker-compose up
    ```
