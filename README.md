@@ -1,4 +1,4 @@
-# BGPG (Board Games Playground)
+# BGPG (Board Game Playground)
 
 BGPG is a web-based online board game sandbox. The main idea behind
 this project is to have an online platform to play any board game with friends.
