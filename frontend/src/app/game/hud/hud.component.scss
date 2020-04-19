@@ -1,0 +1,27 @@
+.tabs {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  button {
+    font-size: 200%;
+    opacity: .7;
+    color: #212529;
+    &:hover,
+    &:active,
+    &.active {
+      opacity: 1;
+      text-shadow: 0 0 10px #ffffff;
+    }
+  }
+}
+
+#panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 15px;
+}

@@ -1,0 +1,52 @@
+{
+  "name": "bgpg-parchis",
+  "title": "Parchis",
+  "version": "0.0.1",
+  "date": "",
+  "description": "Parchís is a Spanish board game of the Cross and Circle family. It is an adaptation of the Indian game Pachisi. Parchís was a very popular game in Spain at one point as well as in Europe and Morocco, and it is still popular specially among adults and seniors. Since it uses dice, Parchís is not usually regarded as an abstract strategy game like checkers or chess. It does not depend entirely on luck either, since the four pawns under a player's command demand some sort of strategy.",
+  "author": "Miguel Montes <npm@mimopo.es>",
+  "license": "UNLICENSED",
+  "homepage": null,
+  "keywords": [],
+  "helpsite": "https://en.wikipedia.org/wiki/Parch%C3%ADs",
+  "generator": null,
+  "board": "/games/parchis.svg",
+  "shapes": {
+    "r": "<circle cx=\"22\" cy=\"23\" r=\"20\" stroke=\"black\" stroke-width=\"3\" fill=\"red\">",
+    "g": "<circle cx=\"22\" cy=\"23\" r=\"20\" stroke=\"black\" stroke-width=\"3\" fill=\"green\">",
+    "b": "<circle cx=\"22\" cy=\"23\" r=\"20\" stroke=\"black\" stroke-width=\"3\" fill=\"blue\">",
+    "y": "<circle cx=\"22\" cy=\"23\" r=\"20\" stroke=\"black\" stroke-width=\"3\" fill=\"yellow\">",
+    "d1": "<g><rect x=\"0\" y=\"0\" width=\"50\" height=\"50\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/><text x=\"20\" y=\"20\" font-family=\"sans-serif\" font-size=\"20\" fill=\"black\">1</text></g>",
+    "d2": "<g><rect x=\"0\" y=\"0\" width=\"50\" height=\"50\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/><text x=\"20\" y=\"20\" font-family=\"sans-serif\" font-size=\"20\" fill=\"black\">2</text></g>",
+    "d3": "<g><rect x=\"0\" y=\"0\" width=\"50\" height=\"50\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/><text x=\"20\" y=\"20\" font-family=\"sans-serif\" font-size=\"20\" fill=\"black\">3</text></g>",
+    "d4": "<g><rect x=\"0\" y=\"0\" width=\"50\" height=\"50\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/><text x=\"20\" y=\"20\" font-family=\"sans-serif\" font-size=\"20\" fill=\"black\">4</text></g>",
+    "d5": "<g><rect x=\"0\" y=\"0\" width=\"50\" height=\"50\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/><text x=\"20\" y=\"20\" font-family=\"sans-serif\" font-size=\"20\" fill=\"black\">5</text></g>",
+    "d6": "<g><rect x=\"0\" y=\"0\" width=\"50\" height=\"50\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/><text x=\"20\" y=\"20\" font-family=\"sans-serif\" font-size=\"20\" fill=\"black\">6</text></g>"
+  },
+  "template": {
+    "tokens": {
+      "r1": { "shapes": ["r"], "shape": "r", "x": 100, "y": 100, "quantity": 1 },
+      "r2": { "shapes": ["r"], "shape": "r", "x": 100, "y": 150, "quantity": 1 },
+      "r3": { "shapes": ["r"], "shape": "r", "x": 150, "y": 100, "quantity": 1 },
+      "r4": { "shapes": ["r"], "shape": "r", "x": 150, "y": 150, "quantity": 1 },
+      "b1": { "shapes": ["b"], "shape": "b", "x": 600, "y": 100, "quantity": 1 },
+      "b2": { "shapes": ["b"], "shape": "b", "x": 600, "y": 150, "quantity": 1 },
+      "b3": { "shapes": ["b"], "shape": "b", "x": 650, "y": 100, "quantity": 1 },
+      "b4": { "shapes": ["b"], "shape": "b", "x": 650, "y": 150, "quantity": 1 },
+      "g1": { "shapes": ["g"], "shape": "g", "x": 100, "y": 600, "quantity": 1 },
+      "g2": { "shapes": ["g"], "shape": "g", "x": 100, "y": 650, "quantity": 1 },
+      "g3": { "shapes": ["g"], "shape": "g", "x": 150, "y": 600, "quantity": 1 },
+      "g4": { "shapes": ["g"], "shape": "g", "x": 150, "y": 650, "quantity": 1 },
+      "y1": { "shapes": ["y"], "shape": "y", "x": 600, "y": 600, "quantity": 1 },
+      "y2": { "shapes": ["y"], "shape": "y", "x": 600, "y": 650, "quantity": 1 },
+      "y3": { "shapes": ["y"], "shape": "y", "x": 650, "y": 600, "quantity": 1 },
+      "y4": { "shapes": ["y"], "shape": "y", "x": 650, "y": 650, "quantity": 1 }
+    },
+    "dices": {
+      "d1": { "shapes": ["d1", "d2", "d3", "d4", "d5", "d6"], "shape": "d1", "quantity": 1 }
+    },
+    "cards": {},
+    "tiles": {},
+    "timers": {}
+  }
+}

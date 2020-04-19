@@ -1,0 +1,12 @@
+<div class="container-fluid">
+  <h1>Lobby</h1>
+
+  <div class="list-group">
+    <a *ngFor="let room of rooms" [routerLink]="['/game', room.id]" class="list-group-item list-group-item-action">
+      <b>{{ room.name }}</b>
+      <br />
+      {{ room.game }}, {{ room.players.length }} players <br />
+      {{ room.created | date: "short" }}
+    </a>
+  </div>
+</div>

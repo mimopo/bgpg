@@ -11,6 +11,31 @@
    * "rush my-global-command --help".
    */
   "commands": [
+    {
+      "commandKind": "global",
+      "name": "heroku-push", 
+      "summary": "Push Docker image to Heroku", 
+      "shellCommand": "heroku container:push web --app bgpg"
+    }, 
+    {
+      "commandKind": "global",
+      "name": "heroku-release", 
+      "summary": "Releases previously pushed Docker image on Heroku", 
+      "shellCommand": "heroku container:release web --app bgpg"
+    }, 
+    {
+      "commandKind": "bulk",
+      "name": "start",
+      "summary": "Bulk start", 
+      "enableParallelism": true, 
+      "ignoreMissingScript": true
+    }
+    // {
+    //   "commandKind": "global",
+    //   "name": "heroku-deploy", 
+    //   "summary": "Deploy on Heroku (build + heroku-push + heroku-release)", 
+    //   "shellCommand": "rush build && rush heroku-push && rush heroku-release"
+    // }
     // {
     //   /**
     //    * (Required) Determines the type of custom command.

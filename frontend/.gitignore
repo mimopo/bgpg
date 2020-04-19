@@ -1,0 +1,11 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+/typings
