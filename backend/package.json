@@ -3,7 +3,6 @@
   "version": "0.0.2",
   "description": "BGPG Backend",
   "author": "Miguel Montes <npm@mimopo.es>",
-  "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
