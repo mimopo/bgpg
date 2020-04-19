@@ -1,6 +1,6 @@
 {
   "name": "@mimopo/bgpg-backend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "BGPG Backend",
   "author": "Miguel Montes <npm@mimopo.es>",
   "private": true,

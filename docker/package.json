@@ -10,7 +10,7 @@
     "build": "ts-node build.ts"
   },
   "devDependencies": {
-    "@mimopo/bgpg-backend": "0.0.1",
+    "@mimopo/bgpg-backend": "0.0.2",
     "@mimopo/bgpg-frontend": "0.0.1",
     "@types/fs-extra": "^8.1.0",
     "@types/node": "^12.12.34",
