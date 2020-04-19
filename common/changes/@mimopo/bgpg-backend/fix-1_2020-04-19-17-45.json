@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@mimopo/bgpg-backend",
+      "comment": "Fix not found error after reloading the page (#1)",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@mimopo/bgpg-backend",
+  "email": "mimopo@users.noreply.github.com"
+}
