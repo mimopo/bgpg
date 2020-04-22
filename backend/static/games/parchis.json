@@ -2,10 +2,17 @@
   "name": "bgpg-parchis",
   "title": "Parchis",
   "version": "0.0.1",
-  "date": "",
   "description": "Parchís is a Spanish board game of the Cross and Circle family. It is an adaptation of the Indian game Pachisi. Parchís was a very popular game in Spain at one point as well as in Europe and Morocco, and it is still popular specially among adults and seniors. Since it uses dice, Parchís is not usually regarded as an abstract strategy game like checkers or chess. It does not depend entirely on luck either, since the four pawns under a player's command demand some sort of strategy.",
   "author": "Miguel Montes <npm@mimopo.es>",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
+  "licenses": [
+    {
+      "element": "Board image",
+      "author": "Víctor Manuel Campos Ramírez",
+      "license": "CC BY-SA 3.0",
+      "link": "https://wiki.creativecommons.org/wiki/Best_practices_for_attribution"
+    }
+  ],
   "homepage": null,
   "keywords": [],
   "helpsite": "https://en.wikipedia.org/wiki/Parch%C3%ADs",

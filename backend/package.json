@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "BGPG Backend",
   "author": "Miguel Montes <npm@mimopo.es>",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build -p tsconfig.prod.json",

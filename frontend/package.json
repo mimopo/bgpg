@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "BGPG Frontend",
   "author": "Miguel Montes <npm@mimopo.es>",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

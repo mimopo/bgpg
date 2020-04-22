@@ -2,10 +2,10 @@ export class Game {
   name: string;
   title: string;
   version: string;
-  date: string;
   description: string;
   author: string;
   license: string;
+  licenses: License[];
   homepage?: string;
   keywords?: string[] = [];
   helpsite: string;
@@ -20,6 +20,13 @@ export class Game {
       this[key] = data[key];
     }
   }
+}
+
+class License {
+  element: string;
+  author: string;
+  license: string;
+  link: string;
 }
 
 class Template {
