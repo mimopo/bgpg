@@ -2,7 +2,7 @@
 SRC=/tmp/bgpg
 DEST=/usr/local/bgpg
 # Install node & npm
-apk add --no-cache nodejs npm
+apk add --no-cache npm
 # Unpack & move
 cd ${SRC}
 tar -xzf mimopo-bgpg-backend-*.tgz
