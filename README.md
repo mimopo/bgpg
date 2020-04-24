@@ -30,6 +30,29 @@ The main parts are:
 | /docker-compose.yml | Docker Compose servers stack      |
 | /rush.json          | Rush config file                  |
 
+## Running development server
+
+0. Install Rush:
+   ```
+   npm install -g @microsoft/rush
+   ```
+1. Clone the project:
+   ```
+   git clone git@github.com:mimopo/bgpg.git
+   ```
+2. Get inside:
+   ```
+   cd bgpg
+   ```
+3. Install dependencies:
+   ```
+   rush install
+   ```
+4. Run servers:
+   ```
+   rush start
+   ```
+
 ## Running your private BGPG server
 
 You can run a private BGPG server using Docker (Docker Hub images coming soon).
@@ -52,7 +75,7 @@ Just follow these steps:
    ```
 3. Install dependencies:
    ```
-   rush update
+   rush install
    ```
 4. Build Apps & Docker image:
    ```
@@ -62,3 +85,7 @@ Just follow these steps:
    ```
    docker-compose up
    ```
+
+## License
+
+BGPG project is open source and licensed under [AGPL-3.0](LICENSE) license.

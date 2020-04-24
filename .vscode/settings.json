@@ -8,5 +8,8 @@
     "**/*.code-search": true,
     "**/.history": true,
     "**/dist": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.tslint": true
   }
 }
