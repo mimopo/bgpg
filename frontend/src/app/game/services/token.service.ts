@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
+import { BehaviorSubject } from 'rxjs';
 import { replaceRecord } from 'src/app/utils/collection';
-import { pairwise, switchMap, map, debounceTime, throttle, throttleTime } from 'rxjs/operators';
+
+import { Socket } from 'src/app/services/socket';
 
 // TODO: Create class
 type Token = any;

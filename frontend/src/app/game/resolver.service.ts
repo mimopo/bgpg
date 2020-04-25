@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 import { DiceService } from './services/dice.service';
 import { RoomService } from './services/room.service';
 import { TokenService } from './services/token.service';
 import { HttpClient } from '@angular/common/http';
 import { switchMap, tap } from 'rxjs/operators';
+
 import { environment } from 'src/environments/environment';
+import { Socket } from '../services/socket';
 
 // TODO: type response
 type JoinResponse = any;
@@ -21,7 +22,7 @@ export class ResolverService implements Resolve<JoinResponse> {
     private http: HttpClient,
     private dice: DiceService,
     private room: RoomService,
-    private token: TokenService
+    private token: TokenService,
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<JoinResponse> {
@@ -32,7 +33,7 @@ export class ResolverService implements Resolve<JoinResponse> {
         this.room.init(response.room);
         this.token.init(response.tokens);
       }),
-      switchMap((response) => this.http.get(`${environment.server}/games/${response.room.game}.json`))
+      switchMap((response) => this.http.get(`${environment.server}/games/${response.room.game}.json`)),
     );
   }
 

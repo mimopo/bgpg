@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
 
 import { Dice } from 'src/app/model/dice.class';
 import { replaceRecord } from 'src/app/utils/collection';
+import { Socket } from 'src/app/services/socket';
 
 @Injectable({
   providedIn: 'root',

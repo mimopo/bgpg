@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
+
+import { Socket } from 'src/app/services/socket';
 
 // TODO: Create interface
 type Room = any;
