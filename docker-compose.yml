@@ -1,33 +1,29 @@
 version: '3.1'
 services:
-    web:
-        image: registry.heroku.com/bgpg/web
-        ports: 
-            - 4000:4000
-        environment: 
-            TYPEORM_CONNECTION: mongodb
-            TYPEORM_HOST: mongo
-            TYPEORM_DATABASE: bgpg
-            TYPEORM_PORT: 27017
-            TYPEORM_SYNCHRONIZE: 1
-            TYPEORM_ENTITIES: dist/entities/**/*.entity.js
-            PORT: 4000
-    mongo:
-        image: mongo
-        ports:
-            - "27017:27017"
-        environment:
-            # MONGO_INITDB_ROOT_USERNAME: root
-            # MONGO_INITDB_ROOT_PASSWORD: bgpg
-            MONGO_INITDB_DATABASE: bgpg
-        volumes: 
-            - database:/data/db
-    mongo-express:
-        image: mongo-express
-        ports:
-            - 8081:8081
-        # environment:
-            # ME_CONFIG_MONGODB_ADMINUSERNAME: root
-            # ME_CONFIG_MONGODB_ADMINPASSWORD: bgpg
-volumes: 
-    database: ~
+  web:
+    image: registry.heroku.com/bgpg/web
+    ports:
+      - 4000:4000
+    environment:
+      TYPEORM_CONNECTION: mongodb
+      TYPEORM_HOST: mongo
+      TYPEORM_DATABASE: bgpg
+      TYPEORM_PORT: 27017
+      TYPEORM_SYNCHRONIZE: 1
+      TYPEORM_ENTITIES: dist/entities/**/*.entity.js
+      PORT: 4000
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: bgpg
+      MONGO_INITDB_DATABASE: bgpg
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    # environment:
+    # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+    # ME_CONFIG_MONGODB_ADMINPASSWORD: bgpg
