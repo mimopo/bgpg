@@ -12,8 +12,5 @@ export class Room {
   name: string;
 
   @Column()
-  players: ObjectID[] = [];
-
-  @Column()
   created: Date = new Date();
 }

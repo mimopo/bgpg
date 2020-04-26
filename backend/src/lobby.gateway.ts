@@ -1,4 +1,5 @@
 import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
+import { OnModuleDestroy } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ObjectID } from 'typeorm';
 import { Socket, Server } from 'socket.io';
@@ -8,103 +9,138 @@ import { Player } from './entities/player.entity';
 import { Token } from './entities/token.entity';
 import { Game } from './model/game.class';
 import { Dice } from './entities/dice.entity';
+import { Session } from './entities/session.entity';
 
 const LOBBY = 'lobby';
 
 @WebSocketGateway()
-export class LobbyGateway implements OnGatewayConnection {
+export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleDestroy {
   @WebSocketServer() private server: Server;
 
   constructor(
-    @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
-    @InjectRepository(Player) private readonly playerRepository: Repository<Player>,
-    @InjectRepository(Token) private readonly tokenRepository: Repository<Token>,
-    @InjectRepository(Dice) private readonly diceRepository: Repository<Dice>,
+    @InjectRepository(Room) private readonly rooms: Repository<Room>,
+    @InjectRepository(Player) private readonly players: Repository<Player>,
+    @InjectRepository(Token) private readonly tokens: Repository<Token>,
+    @InjectRepository(Dice) private readonly dices: Repository<Dice>,
+    @InjectRepository(Session) private readonly sessions: Repository<Session>,
   ) {
     // TODO: Remove room creation
-    this.roomRepository.findOne(1).then(v => { 
-      if (!v) { 
+    this.rooms.findOne(1).then(v => {
+      if (!v) {
         this.mockRoom();
         this.mockRoom();
-      } 
+      }
     });
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  /**
+   * Register player's session
+   */
+  async handleConnection(client: Socket) {
     // TODO: Detect user instead of create a new one
     const player = new Player();
     player.name = 'Player #' + client.client.id.substr(0, 5);
-    player.socketId = client.client.id;
-    this.playerRepository.save(player);
+    await this.players.save(player);
+    // Create session
+    const session = new Session();
+    session.socket = client.id;
+    session.player = player.id;
+    await this.sessions.save(session);
   }
 
+  /**
+   * Destroy player's session
+   */
+  async handleDisconnect(socket: Socket) {
+    const session = await this.getSession(socket);
+    if (session.room) {
+      this.server.in(LOBBY).emit('room.left', session.player);
+      this.server.in(`${session.room}`).emit('room.left', session.player);
+    }
+    await this.sessions.delete(session);
+  }
+
+  /**
+   * Disconnect socket clients and destroy all sessions
+   */
+  async onModuleDestroy() {
+    await new Promise(resolve => this.server.close(() => resolve()));
+    await this.sessions.clear();
+  }
+
+  /**
+   * Join a room
+   */
   @SubscribeMessage('join')
-  async join(client: Socket, roomId: string) {
-    // Join - Leave rooms
-    const player = await this.playerRepository.findOneOrFail({ socketId: client.client.id });
-    const room = await this.dbJoinRoom(player.id, roomId);
-    await this.leaveAllRooms(client);
-    await this.joinRoom(client, roomId);
-    client.on('disconnect', () => this.dbLeaveRoom(player.id, roomId));
-    // Send room update to the other users in the room
-    client.in(roomId).emit('room', room);
-    // Send room update to the lobby
-    this.server.in(LOBBY).emit('room', room);
-    // Send tokens to the user
+  async joinRoom(socket: Socket, roomId: string) {
+    const room = await this.rooms.findOneOrFail(roomId);
+    await this.join(socket, room);
     return {
       room: room,
-      tokens: await this.tokenRepository.find({ room: room.id }),
-      dices: await this.diceRepository.find({ room: room.id }),
+      tokens: await this.tokens.find({ room: room.id }),
+      dices: await this.dices.find({ room: room.id }),
     };
   }
 
+  /**
+   * Go to lobby
+   */
   @SubscribeMessage(LOBBY)
-  async lobby(client: Socket): Promise<Room[]> {
-    await this.leaveAllRooms(client);
-    await this.joinRoom(client, LOBBY);
-    return await this.roomRepository.find();
+  async lobby(socket: Socket): Promise<Room[]> {
+    await this.join(socket);
+    return await this.rooms.find();
   }
 
-  private async leaveAllRooms(client: Socket) {
-    const player = await this.playerRepository.findOneOrFail({ socketId: client.client.id });
-    for (let roomId in client.rooms) {
-      // await repository.updateOne({ _id: roomId }, { $pull: { players: player.id } });
-      if (![client.client.id, LOBBY].includes(roomId)) {
-        await this.dbLeaveRoom(player.id, roomId);
-      }
-      await this.leaveRoom(client, roomId);
+  /**
+   * Join a room and leave the previous room
+   */
+  private async join(socket: Socket, room?: Room) {
+    const session = await this.getSession(socket);
+    // Leave
+    await this.socketLeave(socket, session.room);
+    if (session.room) {
+      this.server.in(LOBBY).emit('room.left');
+      this.server.in(`${session.room}`).emit('room.left');
+    }
+    // Join
+    session.room = room ? room.id : null;
+    await this.sessions.save(session);
+    await this.socketJoin(socket, session.room);
+    if (session.room) {
+      this.server.in(LOBBY).emit('room.join');
+      socket.in(`${session.room}`).emit('room.join');
     }
   }
 
-  // TODO: Move to a repository
-  private async dbJoinRoom(playerId: ObjectID, roomId: string): Promise<Room> {
-    const room = await this.roomRepository.findOneOrFail(roomId);
-    room.players.push(playerId);
-    return this.roomRepository.save(room);
-  }
-
-  // TODO: Move to a repository
-  private async dbLeaveRoom(playerId: ObjectID, roomId: string): Promise<Room> {
-    const room = await this.roomRepository.findOne(roomId);
-    if (room) {
-      room.players = room.players.filter(p => !p.equals(playerId));
-      await this.roomRepository.save(room);
-      this.server.in(LOBBY).emit('room', room);
+  /**
+   * Get player session
+   */
+  private async getSession(socket: Socket): Promise<Session> {
+    try {
+      return await this.sessions.findOneOrFail({ socket: socket.id });
+    } catch (e) {
+      socket.disconnect();
+      throw e;
     }
-    return room;
   }
 
-  private async leaveRoom(socket: Socket, roomId: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      socket.leave(roomId, error => {
+  /**
+   * Leave socket.io room
+   */
+  private async socketLeave(socket: Socket, roomId?: ObjectID): Promise<void> {
+    await new Promise((resolve, reject) => {
+      socket.leave(`${roomId}` || LOBBY, (error: any) => {
         return error ? reject(error) : resolve();
       });
     });
   }
 
-  private async joinRoom(socket: Socket, roomId: string): Promise<void> {
+  /**
+   * Join socket.io room
+   */
+  private async socketJoin(socket: Socket, roomId?: ObjectID): Promise<void> {
     return new Promise((resolve, reject) => {
-      socket.join(roomId, error => {
+      socket.join(`${roomId}` || LOBBY, (error: any) => {
         return error ? reject(error) : resolve();
       });
     });
@@ -115,7 +151,7 @@ export class LobbyGateway implements OnGatewayConnection {
     const room = new Room();
     room.game = 'parchis';
     room.name = 'Room #' + Math.random();
-    await this.roomRepository.save(room);
+    await this.rooms.save(room);
     const game = new Game(require(__dirname + '/../static/games/parchis.json'));
     for (let id in game.template.tokens) {
       const template = game.template.tokens[id];
@@ -126,7 +162,7 @@ export class LobbyGateway implements OnGatewayConnection {
         token.shape = template.shape;
         token.x = template.x;
         token.y = template.y;
-        this.tokenRepository.save(token);
+        this.tokens.save(token);
       }
     }
     for (let id in game.template.dices) {
@@ -136,7 +172,7 @@ export class LobbyGateway implements OnGatewayConnection {
         dice.room = room.id;
         dice.shape = template.shape;
         dice.shapes = template.shapes;
-        this.diceRepository.save(dice);
+        this.dices.save(dice);
       }
     }
   }

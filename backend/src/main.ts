@@ -32,6 +32,8 @@ async function bootstrap() {
       }),
     );
   });
+  // Listen shutdown signals
+  app.enableShutdownHooks();
   // Listen
   await app.listen(process.env.PORT || 3000);
 }

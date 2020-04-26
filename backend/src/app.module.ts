@@ -10,13 +10,10 @@ import { Token } from './entities/token.entity';
 import { Dice } from './entities/dice.entity';
 import { DiceGateway } from './dice.gateway';
 import { TokenGateway } from './token.gateway';
+import { Session } from './entities/session.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot(),
-    TypeOrmModule.forFeature([Room, Player, Token, Dice]),
-  ],
+  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Room, Player, Token, Dice, Session])],
   controllers: [],
   providers: [GameGateway, LobbyGateway, DiceGateway, TokenGateway],
 })

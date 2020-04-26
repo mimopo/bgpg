@@ -7,7 +7,4 @@ export class Player {
 
   @Column()
   name: string;
-
-  @Column()
-  socketId: string;
 }
