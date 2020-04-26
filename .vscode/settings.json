@@ -1,5 +1,8 @@
 {
-  "files.associations": { "*.json": "jsonc" },
+  "files.associations": {
+    "**/package.json": "json",
+    "**/*.json": "jsonc"
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "search.exclude": {
