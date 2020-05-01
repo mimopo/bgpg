@@ -1,0 +1,8 @@
+.ng-touched.ng-invalid {
+  @extend .is-invalid;
+}
+
+.invalid-feedback,
+.valid-feedback {
+  display: block;
+}

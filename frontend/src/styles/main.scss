@@ -1,0 +1,26 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+// Notifications
+app-notification {
+  position: absolute;
+  right: $grid-gutter-width;
+  bottom: $grid-gutter-width;
+  z-index: $zindex-modal;
+}

@@ -14,5 +14,7 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.tslint": true
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "search-node-modules.path": "common/temp/node_modules"
 }

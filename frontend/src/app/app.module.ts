@@ -8,10 +8,11 @@ import { environment } from 'src/environments/environment';
 
 import io from 'socket.io-client';
 import { Socket } from './services/socket';
+import { NotificationModule } from 'src/app/notification/notification.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NotificationModule],
   providers: [
     {
       provide: Socket,

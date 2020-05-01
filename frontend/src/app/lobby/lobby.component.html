@@ -1,12 +1,18 @@
-<div class="container-fluid">
-  <h1>Lobby</h1>
+<div class="container">
+  <h1>
+    Welcome User
+  </h1>
 
-  <div class="list-group">
-    <a *ngFor="let room of rooms" [routerLink]="['/game', room.id]" class="list-group-item list-group-item-action">
-      <b>{{ room.name }}</b>
-      <br />
-      {{ room.game }}, {{ room.players.length }} players <br />
-      {{ room.created | date: "short" }}
-    </a>
-  </div>
+  <p>You can join to an existing room with a link or create a new one.</p>
+  <form [formGroup]="form" (ngSubmit)="create()">
+    <app-form-group [control]="form.controls.name">
+      <input formControlName="name" type="text" class="form-control" placeholder="Enter a room name" />
+    </app-form-group>
+    <div class="form-group">
+      [disabled]="form.invalid || form.disabled"
+      <button type="submit" class="btn btn-block btn-primary">
+        CREATE A NEW ROOM
+      </button>
+    </div>
+  </form>
 </div>

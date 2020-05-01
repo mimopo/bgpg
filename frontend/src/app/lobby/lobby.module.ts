@@ -1,15 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { LobbyRoutingModule } from './lobby-routing.module';
 import { LobbyComponent } from './lobby.component';
-
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [LobbyComponent],
-  imports: [
-    CommonModule,
-    LobbyRoutingModule
-  ]
+  imports: [CoreModule, LobbyRoutingModule],
 })
-export class LobbyModule { }
+export class LobbyModule {}

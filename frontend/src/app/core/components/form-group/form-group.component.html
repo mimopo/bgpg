@@ -1,0 +1,6 @@
+<ng-content></ng-content>
+<div *ngIf="control.touched && control.invalid" class="invalid-feedback">
+  <div *ngFor="let error of control.errors | toArray">
+    {{ error.value }}
+  </div>
+</div>

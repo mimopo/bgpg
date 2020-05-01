@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { LobbyService } from './lobby.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ResolverService implements Resolve<any> {
   constructor(private lobbyService: LobbyService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.lobbyService.join();
+    // return this.lobbyService.join();
   }
 }

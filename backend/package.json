@@ -35,9 +35,11 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "~6.5.4",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.24",
+    "class-validator": "~0.12.2"
   },
   "devDependencies": {
+    "@mimopo/bgpg-core": "~0.0.1",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",

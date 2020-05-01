@@ -3,7 +3,7 @@
     <div class="room">
       <div class="room-name">{{ room.name }}</div>
       <div class="room-game">{{ room.game }}</div>
-      <div class="room-players">{{ room.players.length }} players</div>
+      <div class="room-players">{{ room.players }} players</div>
     </div>
 
     <a [routerLink]="['/lobby']">
@@ -25,4 +25,3 @@
     <i class="fas fa-fw" [class]="open ? 'fa-times-circle' : 'fa-hamburger'"></i>
   </button>
 </div>
-

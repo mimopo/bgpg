@@ -1,0 +1,21 @@
+{
+  "name": "@mimopo/bgpg-core",
+  "version": "0.0.1",
+  "description": "BGPG Shared Components",
+  "author": "Miguel Montes <npm@mimopo.es>",
+  "license": "AGPL-3.0-or-later",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist/* && tsc",
+    "start": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "~3.8.3",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "class-transformer": "^0.2.3",
+    "class-validator": "~0.12.2"
+  }
+}

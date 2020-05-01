@@ -402,6 +402,11 @@
     {
       "packageName": "@mimopo/bgpg-docker",
       "projectFolder": "docker"
+    },
+    {
+      "packageName": "@mimopo/bgpg-core",
+      "projectFolder": "core",
+      "shouldPublish": true
     }
   ]
 }
