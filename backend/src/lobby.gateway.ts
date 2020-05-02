@@ -2,6 +2,7 @@ import { RoomDto } from '@mimopo/bgpg-core';
 import { OnModuleDestroy, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { WsException } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ObjectID, Repository } from 'typeorm';
 
@@ -142,7 +143,13 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     room.game = r.game;
     room.name = r.name;
     await this.rooms.save(room);
-    const game = new Game(require(__dirname + '/../static/games/parchis.json'));
+    let data: Game;
+    try {
+      data = require(__dirname + '/../static/games/' + r.game + '.json');
+    } catch (e) {
+      throw new WsException('Game not available.');
+    }
+    const game = new Game(data);
     const promises: Promise<any>[] = [];
     for (const id in game.template.tokens) {
       const template = game.template.tokens[id];
