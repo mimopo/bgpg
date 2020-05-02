@@ -20,7 +20,7 @@ body {
 // Notifications
 app-notification {
   position: absolute;
+  top: $grid-gutter-width;
   right: $grid-gutter-width;
-  bottom: $grid-gutter-width;
   z-index: $zindex-modal;
 }
