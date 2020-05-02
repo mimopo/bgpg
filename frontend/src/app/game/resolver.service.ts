@@ -1,11 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { DiceService } from './services/dice.service';
 import { RoomService } from './services/room.service';
 import { TokenService } from './services/token.service';
-import { HttpClient } from '@angular/common/http';
-import { switchMap, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { Socket } from '../services/socket';
@@ -40,7 +40,7 @@ export class ResolverService implements Resolve<JoinResponse> {
   // TODO: type response
   private join(roomId: string): Observable<JoinResponse> {
     return new Observable((subscriber) => {
-      this.socket.emit('join', roomId, (response) => {
+      this.socket.emit('room.join', roomId, (response) => {
         subscriber.next(response);
         subscriber.complete();
       });

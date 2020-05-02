@@ -1,5 +1,5 @@
-import { Column, Entity, ObjectIdColumn, ObjectID, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Column, Entity, ObjectIdColumn, ObjectID, Index } from 'typeorm';
 
 @Entity()
 export class Dice {

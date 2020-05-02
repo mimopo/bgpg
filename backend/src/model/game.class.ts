@@ -16,7 +16,7 @@ export class Game {
 
   constructor(data: Game) {
     // TODO: Use a parser
-    for (let key in data) {
+    for (const key in data) {
       this[key] = data[key];
     }
   }

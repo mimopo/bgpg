@@ -13,8 +13,13 @@
     "**/dist": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll.tslint": true,
+    "source.fixAll.eslint": true
   },
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "search-node-modules.path": "common/temp/node_modules"
+  "search-node-modules.path": "common/temp/node_modules",
+  "eslint.workingDirectories": ["./backend"],
+  // "eslint.nodePath": "${workspaceFolder}/common/temp/node_modules",
+  "tslint.exclude": ["./backend/**"],
+  "eslint.probe": ["typescript"]
 }

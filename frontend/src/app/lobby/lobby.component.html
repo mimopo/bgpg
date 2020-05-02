@@ -6,11 +6,17 @@
   <p>You can join to an existing room with a link or create a new one.</p>
   <form [formGroup]="form" (ngSubmit)="create()">
     <app-form-group [control]="form.controls.name">
-      <input formControlName="name" type="text" class="form-control" placeholder="Enter a room name" />
+      <label for="room-name">Customize your room name</label>
+      <input formControlName="name" type="text" id="room-name" class="form-control" />
+    </app-form-group>
+    <app-form-group [control]="form.controls.game">
+      <label for="room-game">Select game</label>
+      <select formControlName="game" id="room-game" class="custom-select">
+        <option *ngFor="let game of games" [value]="game.value">{{ game.label }}</option>
+      </select>
     </app-form-group>
     <div class="form-group">
-      [disabled]="form.invalid || form.disabled"
-      <button type="submit" class="btn btn-block btn-primary">
+      <button type="submit" class="btn btn-block btn-primary" [disabled]="form.invalid || form.disabled">
         CREATE A NEW ROOM
       </button>
     </div>

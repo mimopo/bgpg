@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CdkDragMove } from '@angular/cdk/drag-drop';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CdkDragMove, DragDropConfig } from '@angular/cdk/drag-drop';
 
+import { environment } from 'src/environments/environment';
 import { Dice } from '../model/dice.class';
 import { RoomService } from './services/room.service';
 import { TokenService } from './services/token.service';
-import { environment } from 'src/environments/environment';
 
 // TODO: Create class
 type Token = any;

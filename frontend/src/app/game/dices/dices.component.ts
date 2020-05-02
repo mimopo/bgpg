@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DiceService } from '../services/dice.service';
-import { Dice } from 'src/app/model/dice.class';
 import { ActivatedRoute } from '@angular/router';
+import { Dice } from 'src/app/model/dice.class';
 import { removeRecord } from 'src/app/utils/collection';
+import { DiceService } from '../services/dice.service';
 
 @Component({
   selector: 'app-dices',

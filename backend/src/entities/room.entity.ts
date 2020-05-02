@@ -1,7 +1,7 @@
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
-import { Type, Transform } from 'class-transformer';
-
 import { RoomDto } from '@mimopo/bgpg-core';
+import { Type, Transform } from 'class-transformer';
+import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+
 
 @Entity()
 export class Room extends RoomDto {

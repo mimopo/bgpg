@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { LobbyComponent } from './lobby.component';
-import { ResolverService } from './resolver.service';
 
 const routes: Routes = [{ path: '', component: LobbyComponent }];
 

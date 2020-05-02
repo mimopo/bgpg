@@ -17,8 +17,8 @@ export class Token {
   shape: string;
 
   @Column()
-  x: number = 0;
+  x = 0;
 
   @Column()
-  y: number = 0;
+  y = 0;
 }

@@ -1,8 +1,7 @@
+import { ErrorDto, ValidationErrorDto } from '@mimopo/bgpg-core';
 import { ArgumentsHost, Catch, BadRequestException } from '@nestjs/common';
 import { BaseWsExceptionFilter, WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-
-import { ErrorDto, ValidationErrorDto } from '@mimopo/bgpg-core';
 
 @Catch()
 export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
@@ -11,10 +10,10 @@ export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
     if (exception instanceof BadRequestException) {
       const response: any = exception.getResponse();
       // TODO: Improve this error handling
-      error = <ValidationErrorDto>{
+      error = {
         error: ErrorDto.errors.validation,
         message: response.message.map((m: string) => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') + '.',
-      };
+      } as ValidationErrorDto;
     } else {
       error = {
         error: ErrorDto.errors.unexpected,

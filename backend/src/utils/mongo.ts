@@ -1,5 +1,11 @@
-import { ObjectID } from 'typeorm';
 import { ObjectId } from 'mongodb';
+import { ObjectID } from 'typeorm';
+
+class ObjectIdAdapter extends ObjectId {
+  generate(time?: number) {
+    return ObjectId.generate(time).toString();
+  }
+}
 
 export type EntityId = string | number | ObjectID;
 
@@ -8,10 +14,4 @@ export function toObjectId(value: EntityId): ObjectID {
     return new ObjectIdAdapter(value);
   }
   return value;
-}
-
-class ObjectIdAdapter extends ObjectId {
-  generate(time?: number) {
-    return ObjectId.generate(time).toString();
-  }
 }

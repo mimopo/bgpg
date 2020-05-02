@@ -1,9 +1,10 @@
-import * as express from 'express';
-import { join } from 'path';
 import { existsSync } from 'fs';
 import { ServerResponse } from 'http';
-import { NestFactory } from '@nestjs/core';
+import { join } from 'path';
+
 import { Logger } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import * as express from 'express';
 
 import { AppModule } from './app.module';
 
@@ -26,7 +27,7 @@ async function bootstrap() {
     app.use(
       url,
       express.static(path, {
-        setHeaders: (res: ServerResponse, path, stat) => {
+        setHeaders: (res: ServerResponse) => {
           res.setHeader('Access-Control-Allow-Origin', '*');
           return res;
         },

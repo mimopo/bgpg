@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NgModule } from '@angular/core';
 
 import { CoreModule } from '../core/core.module';
+import { DicesComponent } from './dices/dices.component';
 import { GameRoutingModule } from './game-routing.module';
 import { GameComponent } from './game.component';
 import { HudComponent } from './hud/hud.component';
-import { DicesComponent } from './dices/dices.component';
 
 
 @NgModule({

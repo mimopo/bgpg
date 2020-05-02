@@ -1,13 +1,13 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Token } from './entities/token.entity';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { Socket } from 'socket.io';
 import { Repository } from 'typeorm';
-import { Socket, Server } from 'socket.io';
+
+import { Token } from './entities/token.entity';
+
 
 @WebSocketGateway()
 export class TokenGateway {
-  @WebSocketServer() private server: Server;
-
   constructor(@InjectRepository(Token) private readonly tokenRepository: Repository<Token>) {}
 
   @SubscribeMessage('token')

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 
+import { CoreModule } from '../core/core.module';
 import { LobbyRoutingModule } from './lobby-routing.module';
 import { LobbyComponent } from './lobby.component';
-import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [LobbyComponent],

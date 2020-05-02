@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { RoomDto, ErrorDto } from '@mimopo/bgpg-core';
+import { ErrorDto, RoomDto } from '@mimopo/bgpg-core';
 
-import { LobbyService } from './lobby.service';
 import { EntityFormGroup } from 'src/app/entity-form-group.class';
-import { NotificationService } from 'src/app/notification/notification.service';
 import { SeverityEnum } from 'src/app/notification/model/severity.enum';
+import { NotificationService } from 'src/app/notification/notification.service';
+import { LobbyService } from './lobby.service';
 
 @Component({
   selector: 'app-lobby',
@@ -14,6 +14,13 @@ import { SeverityEnum } from 'src/app/notification/model/severity.enum';
   styleUrls: ['./lobby.component.scss'],
 })
 export class LobbyComponent {
+  // TODO: Get games from API
+  games = [
+    {
+      label: 'Parchís',
+      value: 'parchis',
+    },
+  ];
   form = new EntityFormGroup(RoomDto, {
     game: 'parchis',
     name: 'Room',

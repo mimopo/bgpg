@@ -1,8 +1,9 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Dice } from './entities/dice.entity';
 import { Repository } from 'typeorm';
+
+import { Dice } from './entities/dice.entity';
 import { toObjectId } from './utils/mongo';
 
 @WebSocketGateway()
@@ -23,7 +24,7 @@ export class DiceGateway {
     return dices;
   }
 
-  private async rollDice(dice: Dice) { 
+  private async rollDice(dice: Dice) {
     const result = Math.floor(Math.random() * dice.shapes.length);
     dice.shape = dice.shapes[result];
     await this.diceRepository.save(dice);

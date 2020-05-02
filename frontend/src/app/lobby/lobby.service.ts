@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { classToPlain, plainToClass } from 'class-transformer';
+import { Observable } from 'rxjs';
 
-import { RoomDto, ErrorDto } from '@mimopo/bgpg-core';
+import { ErrorDto, RoomDto } from '@mimopo/bgpg-core';
 
 import { Socket } from '../services/socket';
 

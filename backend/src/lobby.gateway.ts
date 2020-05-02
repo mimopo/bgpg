@@ -1,20 +1,17 @@
-import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
-import { OnModuleDestroy, UsePipes, ValidationPipe, UseFilters } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ObjectID } from 'typeorm';
-import { Socket, Server } from 'socket.io';
-
 import { RoomDto } from '@mimopo/bgpg-core';
+import { OnModuleDestroy, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { ObjectID, Repository } from 'typeorm';
 
-import { Room } from './entities/room.entity';
+import { Dice } from './entities/dice.entity';
 import { Player } from './entities/player.entity';
+import { Room } from './entities/room.entity';
+import { Session } from './entities/session.entity';
 import { Token } from './entities/token.entity';
 import { Game } from './model/game.class';
-import { Dice } from './entities/dice.entity';
-import { Session } from './entities/session.entity';
-import { WsExceptionFilter } from 'src/ws-exception.filter';
-
-const LOBBY = 'lobby';
+import { WsExceptionFilter } from './ws-exception.filter';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @UseFilters(new WsExceptionFilter())
@@ -28,15 +25,7 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     @InjectRepository(Token) private readonly tokens: Repository<Token>,
     @InjectRepository(Dice) private readonly dices: Repository<Dice>,
     @InjectRepository(Session) private readonly sessions: Repository<Session>,
-  ) {
-    // TODO: Remove room creation
-    this.rooms.findOne(1).then(v => {
-      if (!v) {
-        this.mockRoom();
-        this.mockRoom();
-      }
-    });
-  }
+  ) {}
 
   /**
    * Register player's session
@@ -59,7 +48,6 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   async handleDisconnect(socket: Socket) {
     const session = await this.getSession(socket);
     if (session.room) {
-      this.server.in(LOBBY).emit('room.left', session.room);
       this.server.in(`${session.room}`).emit('room.left', session.player);
     }
     await this.sessions.delete(session);
@@ -75,15 +63,13 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
 
   @SubscribeMessage('room.create')
   async create(socket: Socket, room: RoomDto) {
-    console.log(room);
-    // console.log(room, plainToClass(RoomDto, room));
     return this.mockRoom(room);
   }
 
   /**
    * Join a room
    */
-  @SubscribeMessage('join')
+  @SubscribeMessage('room.join')
   async joinRoom(socket: Socket, roomId: string) {
     const room = await this.rooms.findOneOrFail(roomId);
     await this.join(socket, room);
@@ -98,37 +84,13 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   }
 
   /**
-   * Go to lobby
-   */
-  @SubscribeMessage(LOBBY)
-  async lobby(socket: Socket): Promise<any[]> {
-    await this.join(socket);
-    const rooms = await this.rooms.find({
-      take: 100,
-      order: {
-        created: 'DESC',
-      },
-    });
-    // TODO: Optimize queries and write a DTO
-    const players = await Promise.all(
-      rooms.map(r =>
-        this.sessions.count({
-          room: r.id,
-        }),
-      ),
-    );
-    return rooms.map((r, i) => Object.assign({ players: players[i] }, r));
-  }
-
-  /**
    * Join a room and leave the previous room
    */
   private async join(socket: Socket, room?: Room) {
     const session = await this.getSession(socket);
     // Leave
-    await this.socketLeave(socket, session.room);
     if (session.room) {
-      this.server.in(LOBBY).emit('room.left', session.room);
+      await this.socketLeave(socket, session.room);
       this.server.in(`${session.room}`).emit('room.left', session.player);
     }
     // Join
@@ -136,7 +98,6 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     await this.sessions.save(session);
     await this.socketJoin(socket, session.room);
     if (session.room) {
-      this.server.in(LOBBY).emit('room.join', session.room);
       socket.in(`${session.room}`).emit('room.join', session.player);
     }
   }
@@ -156,9 +117,9 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   /**
    * Leave socket.io room
    */
-  private async socketLeave(socket: Socket, roomId?: ObjectID): Promise<void> {
+  private async socketLeave(socket: Socket, roomId: ObjectID): Promise<void> {
     await new Promise((resolve, reject) => {
-      socket.leave(`${roomId}` || LOBBY, (error: any) => {
+      socket.leave(`${roomId}`, (error: any) => {
         return error ? reject(error) : resolve();
       });
     });
@@ -167,9 +128,9 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   /**
    * Join socket.io room
    */
-  private async socketJoin(socket: Socket, roomId?: ObjectID): Promise<void> {
+  private async socketJoin(socket: Socket, roomId: ObjectID): Promise<void> {
     return new Promise((resolve, reject) => {
-      socket.join(`${roomId}` || LOBBY, (error: any) => {
+      socket.join(`${roomId}`, (error: any) => {
         return error ? reject(error) : resolve();
       });
     });
@@ -183,7 +144,7 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     await this.rooms.save(room);
     const game = new Game(require(__dirname + '/../static/games/parchis.json'));
     const promises: Promise<any>[] = [];
-    for (let id in game.template.tokens) {
+    for (const id in game.template.tokens) {
       const template = game.template.tokens[id];
       for (let i = 0; i < template.quantity; i++) {
         const token = new Token();
@@ -195,7 +156,7 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
         promises.push(this.tokens.save(token));
       }
     }
-    for (let id in game.template.dices) {
+    for (const id in game.template.dices) {
       const template = game.template.dices[id];
       for (let i = 0; i < template.quantity; i++) {
         const dice = new Dice();

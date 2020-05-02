@@ -1,6 +1,6 @@
-import { ValidatorFn, FormGroup, ValidationErrors, FormControl } from '@angular/forms';
-import { validateSync } from 'class-validator';
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { plainToClass } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
 export declare type ClassType<T> = new (...args: any[]) => T;
 
