@@ -85,6 +85,21 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   }
 
   /**
+   * Leave a room
+   */
+  @SubscribeMessage('room.leave')
+  async leaveRoom(socket: Socket): Promise<true> {
+    const session = await this.getSession(socket);
+    if (session.room) {
+      session.room = null;
+      await this.sessions.save(session);
+      await this.socketLeave(socket, session.room);
+      this.server.in(`${session.room}`).emit('room.left', session.player);
+    }
+    return true;
+  }
+
+  /**
    * Join a room and leave the previous room
    */
   private async join(socket: Socket, room?: Room) {
