@@ -1,3 +1,15 @@
-<div *ngIf="!connected">Connecting to server...</div>
 <router-outlet></router-outlet>
 <app-notification></app-notification>
+
+<ng-container *ngIf="!connected">
+  <div class="modal d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <p>Connecting to server...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</ng-container>

@@ -13,6 +13,8 @@ import { Socket } from '../services/socket';
 // TODO: type response
 type JoinResponse = any;
 
+const reload = () => window.location.reload();
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,12 +39,18 @@ export class ResolverService implements Resolve<JoinResponse> {
     );
   }
 
+  removeReconnectListener() {
+    this.socket.removeListener('connect', reload);
+  }
+
   // TODO: type response
   private join(roomId: string): Observable<JoinResponse> {
     return new Observable((subscriber) => {
       this.socket.emit('room.join', roomId, (response) => {
         subscriber.next(response);
         subscriber.complete();
+        // TODO: Improve reconnect handling reloading the route instead of the page
+        this.socket.on('connect', reload);
       });
     });
   }
