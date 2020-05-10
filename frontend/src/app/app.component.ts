@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Socket } from './services/socket';
+import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -10,16 +10,14 @@ import { Socket } from './services/socket';
 export class AppComponent implements OnInit {
   connected = false;
 
-  constructor(private socket: Socket) {}
+  constructor(private socket: SocketService) {}
 
   ngOnInit() {
     this.connected = this.socket.connected;
-    if (!this.connected) {
-      this.socket.on('connect', () => {
-        this.connected = true;
-      });
-    }
-    this.socket.once('disconnect', () => {
+    this.socket.on('connect').subscribe(() => {
+      this.connected = true;
+    });
+    this.socket.on('disconnect').subscribe(() => {
       this.connected = false;
     });
   }

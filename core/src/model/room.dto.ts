@@ -1,7 +1,9 @@
-import { IsNotEmpty, Matches } from 'class-validator';
+import { IsNotEmpty, Matches, IsMongoId, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RoomDto {
+  @IsMongoId()
+  @IsOptional()
   id?: any;
 
   @IsNotEmpty()

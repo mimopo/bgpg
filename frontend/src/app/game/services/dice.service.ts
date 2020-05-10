@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 import { Dice } from 'src/app/model/dice.class';
-import { Socket } from 'src/app/services/socket';
 import { replaceRecord } from 'src/app/utils/collection';
+import { SocketService } from '../../services/socket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +19,8 @@ export class DiceService {
     return this.history$.asObservable();
   }
 
-  constructor(private socket: Socket) {
-    this.socket.on('dices', (dices: Dice[]) => {
+  constructor(private socket: SocketService) {
+    this.socket.on('dices').subscribe((dices: Dice[]) => {
       dices.forEach((dice) => {
         replaceRecord(this.dices$.value, dice);
       });

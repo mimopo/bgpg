@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { replaceRecord } from 'src/app/utils/collection';
 
-import { Socket } from 'src/app/services/socket';
+import { SocketService } from '../../services/socket.service';
 
 // TODO: Create class
 type Token = any;
@@ -18,8 +18,8 @@ export class TokenService {
 
   // private move$ = new Subject<Token>();
 
-  constructor(private socket: Socket) {
-    this.socket.on('token', (token: Token) => {
+  constructor(private socket: SocketService) {
+    this.socket.on('token').subscribe((token: Token) => {
       replaceRecord(this.tokens$.value, token);
       this.tokens$.next(this.tokens$.value);
     });

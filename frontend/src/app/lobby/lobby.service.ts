@@ -1,27 +1,18 @@
 import { Injectable } from '@angular/core';
 import { classToPlain, plainToClass } from 'class-transformer';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { ErrorDto, RoomDto } from '@mimopo/bgpg-core';
+import { RoomDto } from '@mimopo/bgpg-core';
 
-import { Socket } from '../services/socket';
+import { SocketService } from '../services/socket.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LobbyService {
-  constructor(private socket: Socket) {}
+  constructor(private socket: SocketService) {}
 
   create(room: RoomDto) {
-    return new Observable((subscriber) => {
-      this.socket.emit('room.create', classToPlain(room), (response: RoomDto | ErrorDto) => {
-        if ((response as ErrorDto).error) {
-          subscriber.error(response);
-        } else {
-          subscriber.next(plainToClass(RoomDto, response));
-          subscriber.complete();
-        }
-      });
-    });
+    return this.socket.request('room.create', classToPlain(room)).pipe(map((response: RoomDto) => plainToClass(RoomDto, response)));
   }
 }

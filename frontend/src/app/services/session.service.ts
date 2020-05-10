@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { PlayerDto } from '@mimopo/bgpg-core';
+import { BehaviorSubject } from 'rxjs';
 
-import { Socket } from './socket';
+import { SocketService } from './socket.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionService {
-  private user$ = new Subject();
+  private player$ = new BehaviorSubject<PlayerDto>(localStorage.get('player'));
 
-  get user() {
-    return this.user$.asObservable();
+  get player() {
+    return this.player$.asObservable();
   }
 
-  constructor(private socket: Socket) {
-    this.socket.on('login', (player) => this.user$.next(player));
+  constructor(private socket: SocketService) {
+    this.socket.on('login').subscribe((player: PlayerDto) => this.player$.next(player));
   }
+
+  // updatePlayer(player: PlayerDto) {
+
+  // }
 }

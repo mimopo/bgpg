@@ -1,15 +1,16 @@
-import { RoomDto } from '@mimopo/bgpg-core';
+import { RoomDto, PlayerDto } from '@mimopo/bgpg-core';
 import { OnModuleDestroy, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { WsException } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { classToPlain, deserialize } from 'class-transformer';
+import { validate } from 'class-validator';
+import { Server, Socket, Namespace } from 'socket.io';
 import { ObjectID, Repository } from 'typeorm';
 
 import { Dice } from './entities/dice.entity';
 import { Player } from './entities/player.entity';
 import { Room } from './entities/room.entity';
-import { Session } from './entities/session.entity';
 import { Token } from './entities/token.entity';
 import { Game } from './model/game.class';
 import { WsExceptionFilter } from './ws-exception.filter';
@@ -22,36 +23,35 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
 
   constructor(
     @InjectRepository(Room) private readonly rooms: Repository<Room>,
-    @InjectRepository(Player) private readonly players: Repository<Player>,
     @InjectRepository(Token) private readonly tokens: Repository<Token>,
     @InjectRepository(Dice) private readonly dices: Repository<Dice>,
-    @InjectRepository(Session) private readonly sessions: Repository<Session>,
+    @InjectRepository(Player) private readonly players: Repository<Player>,
   ) {}
 
   /**
    * Register player's session
    */
-  async handleConnection(client: Socket) {
-    // TODO: Detect user instead of create a new one
+  async handleConnection(socket: Socket) {
+    const profile = deserialize(PlayerDto, socket.handshake.query.player);
+    const invalid = profile && (await validate(profile));
     const player = new Player();
-    player.name = 'Player #' + client.client.id.substr(0, 5);
+    const name = invalid ? profile.name : 'Player #' + socket.id.substr(0, 5);
+    player.socket = socket.id;
+    player.name = name;
     await this.players.save(player);
-    // Create session
-    const session = new Session();
-    session.socket = client.id;
-    session.player = player.id;
-    await this.sessions.save(session);
+    this.emit(socket, 'login', classToPlain(player));
+    console.log(player);
   }
 
   /**
    * Destroy player's session
    */
   async handleDisconnect(socket: Socket) {
-    const session = await this.getSession(socket);
+    const session = await this.getPlayer(socket);
     if (session.room) {
-      this.server.in(`${session.room}`).emit('room.left', session.player);
+      this.emit(this.server.in(`${session.room}`), 'room.left', session.id);
     }
-    await this.sessions.delete(session);
+    await this.players.delete(session);
   }
 
   /**
@@ -59,11 +59,18 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    */
   async onModuleDestroy() {
     await new Promise(resolve => this.server.close(() => resolve()));
-    await this.sessions.clear();
+    await this.players.clear();
+  }
+
+  @SubscribeMessage('player.profile')
+  async profile(socket: Socket, profile: PlayerDto): Promise<PlayerDto> {
+    const player = await this.getPlayer(socket);
+    player.name = profile.name;
+    return this.players.save(player);
   }
 
   @SubscribeMessage('room.create')
-  async create(socket: Socket, room: RoomDto) {
+  async create(socket: Socket, room: RoomDto): Promise<RoomDto> {
     return this.mockRoom(room);
   }
 
@@ -74,11 +81,9 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   async joinRoom(socket: Socket, roomId: string) {
     const room = await this.rooms.findOneOrFail(roomId);
     await this.join(socket, room);
-    const sessions = await this.sessions.find({ room: room.id });
-    const players = await this.players.findByIds(sessions.map(s => s.player));
     return {
       room: room,
-      players: players,
+      players: await this.players.find({ room: room.id }),
       tokens: await this.tokens.find({ room: room.id }),
       dices: await this.dices.find({ room: room.id }),
     };
@@ -89,12 +94,12 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    */
   @SubscribeMessage('room.leave')
   async leaveRoom(socket: Socket): Promise<true> {
-    const session = await this.getSession(socket);
+    const session = await this.getPlayer(socket);
     if (session.room) {
       session.room = null;
-      await this.sessions.save(session);
+      await this.players.save(session);
       await this.socketLeave(socket, session.room);
-      this.server.in(`${session.room}`).emit('room.left', session.player);
+      this.emit(this.server.in(`${session.room}`), 'room.left', session.id);
     }
     return true;
   }
@@ -103,27 +108,27 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * Join a room and leave the previous room
    */
   private async join(socket: Socket, room?: Room) {
-    const session = await this.getSession(socket);
+    const session = await this.getPlayer(socket);
     // Leave
     if (session.room) {
       await this.socketLeave(socket, session.room);
-      this.server.in(`${session.room}`).emit('room.left', session.player);
+      this.emit(this.server.in(`${session.room}`), 'room.left', session.id);
     }
     // Join
     session.room = room ? room.id : null;
-    await this.sessions.save(session);
+    await this.players.save(session);
     await this.socketJoin(socket, session.room);
     if (session.room) {
-      socket.in(`${session.room}`).emit('room.join', session.player);
+      this.emit(socket.in(`${session.room}`), 'room.join', session.id);
     }
   }
 
   /**
-   * Get player session
+   * Get player
    */
-  private async getSession(socket: Socket): Promise<Session> {
+  private async getPlayer(socket: Socket): Promise<Player> {
     try {
-      return await this.sessions.findOneOrFail({ socket: socket.id });
+      return await this.players.findOneOrFail({ socket: socket.id });
     } catch (e) {
       socket.disconnect();
       throw e;
@@ -190,5 +195,10 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     }
     await Promise.all(promises);
     return room;
+  }
+
+  private emit(socket: Socket | Namespace, event: string, data?: any, ack?: () => void): boolean {
+    const message = data !== null && typeof data === 'object' ? classToPlain(data) : data;
+    return socket.emit(event, message, ack);
   }
 }

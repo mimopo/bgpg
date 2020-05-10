@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 
-import { Socket } from 'src/app/services/socket';
+import { SocketService } from '../../services/socket.service';
 
 // TODO: Create interface
 type Room = any;
@@ -15,8 +15,8 @@ export class RoomService {
     return this.room$.asObservable();
   }
 
-  constructor(private socket: Socket) {
-    this.socket.on('room', (room: Room) => {
+  constructor(private socket: SocketService) {
+    this.socket.on('room').subscribe((room: Room) => {
       this.room$.next(room);
     });
   }
