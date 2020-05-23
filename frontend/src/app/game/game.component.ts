@@ -1,14 +1,11 @@
 import { CdkDragMove } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DiceDto, TokenDto } from '@mimopo/bgpg-core';
 
 import { environment } from 'src/environments/environment';
-import { Dice } from '../model/dice.class';
 import { RoomService } from './services/room.service';
 import { TokenService } from './services/token.service';
-
-// TODO: Create class
-type Token = any;
 
 interface Position {
   x: number;
@@ -26,8 +23,8 @@ export class GameComponent implements OnInit {
   board: string;
   room: any;
   showHud = false;
-  dices: Dice[] = [];
-  tokens: Token[] = [];
+  dices: DiceDto[] = [];
+  tokens: TokenDto[] = [];
   shapes: Record<string, string> = {};
 
   constructor(private route: ActivatedRoute, private roomService: RoomService, private tokenService: TokenService) {}
@@ -39,7 +36,7 @@ export class GameComponent implements OnInit {
     this.tokenService.tokens.subscribe((tokens) => (this.tokens = tokens));
   }
 
-  move(item: Token, event: CdkDragMove) {
+  move(item: TokenDto, event: CdkDragMove) {
     // TODO: Calculate the difference between token x,y and pointer x,y
     // TODO: This is the best way?
     const { x, y } = this.translateCoordinates(event.pointerPosition);

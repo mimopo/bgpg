@@ -1,5 +1,5 @@
 import { RoomDto, PlayerDto } from '@mimopo/bgpg-core';
-import { OnModuleDestroy, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { OnModuleDestroy, UseFilters, UsePipes, ValidationPipe, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { WsException } from '@nestjs/websockets';
@@ -17,15 +17,16 @@ import { WsExceptionFilter } from './ws-exception.filter';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @UseFilters(new WsExceptionFilter())
+@UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
 export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleDestroy {
   @WebSocketServer() private server: Server;
 
   constructor(
-    @InjectRepository(Room) private readonly rooms: Repository<Room>,
-    @InjectRepository(Token) private readonly tokens: Repository<Token>,
     @InjectRepository(Dice) private readonly dices: Repository<Dice>,
     @InjectRepository(Player) private readonly players: Repository<Player>,
+    @InjectRepository(Room) private readonly rooms: Repository<Room>,
+    @InjectRepository(Token) private readonly tokens: Repository<Token>,
   ) {}
 
   /**
@@ -39,7 +40,7 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     player.socket = socket.id;
     player.name = name;
     await this.players.save(player);
-    this.emit(socket, 'login', classToPlain(player));
+    this.emit(socket, 'login', player);
     console.log(player);
   }
 
@@ -78,14 +79,19 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * Join a room
    */
   @SubscribeMessage('room.join')
-  async joinRoom(socket: Socket, roomId: string) {
+  async joinRoom(socket: Socket, roomId: string): Promise<any> {
     const room = await this.rooms.findOneOrFail(roomId);
     await this.join(socket, room);
+    const [players, tokens, dices] = await Promise.all([
+      this.players.find({ room: room.id }),
+      this.tokens.find({ room: room.id }),
+      this.dices.find({ room: room.id }),
+    ]);
     return {
       room: room,
-      players: await this.players.find({ room: room.id }),
-      tokens: await this.tokens.find({ room: room.id }),
-      dices: await this.dices.find({ room: room.id }),
+      players: players.map(r => classToPlain(r)),
+      tokens: tokens.map(r => classToPlain(r)),
+      dices: dices.map(r => classToPlain(r)),
     };
   }
 
@@ -107,7 +113,7 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   /**
    * Join a room and leave the previous room
    */
-  private async join(socket: Socket, room?: Room) {
+  private async join(socket: Socket, room?: Room): Promise<void> {
     const session = await this.getPlayer(socket);
     // Leave
     if (session.room) {
@@ -199,6 +205,10 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect, O
 
   private emit(socket: Socket | Namespace, event: string, data?: any, ack?: () => void): boolean {
     const message = data !== null && typeof data === 'object' ? classToPlain(data) : data;
-    return socket.emit(event, message, ack);
+    if (ack) {
+      return socket.emit(event, message, ack);
+    } else {
+      return socket.emit(event, message);
+    }
   }
 }

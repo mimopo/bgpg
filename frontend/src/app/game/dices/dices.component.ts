@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Dice } from 'src/app/model/dice.class';
-import { removeRecord } from 'src/app/utils/collection';
+import { DiceDto } from '@mimopo/bgpg-core';
+
+import { removeRecord } from '../../utils/collection';
 import { DiceService } from '../services/dice.service';
 
 @Component({
@@ -10,8 +11,8 @@ import { DiceService } from '../services/dice.service';
   styleUrls: ['./dices.component.scss'],
 })
 export class DicesComponent implements OnInit {
-  dices: Dice[] = [];
-  selected: Dice[] = [];
+  dices: DiceDto[] = [];
+  selected: DiceDto[] = [];
   shapes: Record<string, string> = {};
   history: { date: Date; dices: string[] }[] = [];
 
@@ -32,7 +33,7 @@ export class DicesComponent implements OnInit {
     });
   }
 
-  toggle(dice: Dice) {
+  toggle(dice: DiceDto) {
     if (this.dices.indexOf(dice) === -1) {
       this.dices.push(dice);
     } else {
@@ -40,7 +41,7 @@ export class DicesComponent implements OnInit {
     }
   }
 
-  roll(dices: Dice[]) {
+  roll(dices: DiceDto[]) {
     this.diceService.roll(dices.map((d) => d.id));
     this.shapes = this.route.snapshot.data.game.shapes;
   }

@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
+import { TokenDto } from '@mimopo/bgpg-core';
 import { BehaviorSubject } from 'rxjs';
 import { replaceRecord } from 'src/app/utils/collection';
 
 import { SocketService } from '../../services/socket.service';
 
-// TODO: Create class
-type Token = any;
-
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
-  private tokens$ = new BehaviorSubject<Token[]>([]);
+  private tokens$ = new BehaviorSubject<TokenDto[]>([]);
   get tokens() {
     return this.tokens$.asObservable();
   }
@@ -19,7 +17,7 @@ export class TokenService {
   // private move$ = new Subject<Token>();
 
   constructor(private socket: SocketService) {
-    this.socket.on('token').subscribe((token: Token) => {
+    this.socket.on('token').subscribe((token: TokenDto) => {
       replaceRecord(this.tokens$.value, token);
       this.tokens$.next(this.tokens$.value);
     });
@@ -32,11 +30,11 @@ export class TokenService {
     //   });
   }
 
-  init(tokens: Token[]) {
+  init(tokens: TokenDto[]) {
     this.tokens$.next(tokens);
   }
 
-  move(token: Token, x: number, y: number) {
+  move(token: TokenDto, x: number, y: number) {
     token.x = x;
     token.y = y;
     // this.move$.next(token);

@@ -1,20 +1,26 @@
-import { Exclude } from 'class-transformer';
+import { DiceDto } from '@mimopo/bgpg-core';
+import { Exclude, Expose, Type, Transform } from 'class-transformer';
 import { Column, Entity, ObjectIdColumn, ObjectID, Index } from 'typeorm';
 
+@Exclude()
 @Entity()
-export class Dice {
+export class Dice extends DiceDto {
+  @Type(() => ObjectID)
+  @Transform(v => `${v}`)
   @ObjectIdColumn()
+  @Expose()
   id: ObjectID;
 
   // TODO: Review this column type
-  @Exclude()
   @Index()
   @Column('varchar')
   room: ObjectID;
 
   @Column()
+  @Expose()
   shapes: string[];
 
   @Column()
+  @Expose()
   shape: string;
 }
