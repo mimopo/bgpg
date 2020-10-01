@@ -25,7 +25,7 @@ async function bootstrap() {
     app.use(
       url,
       express.static(path, {
-        setHeaders: (res: ServerResponse, path, stat) => {
+        setHeaders: (res: ServerResponse) => {
           res.setHeader('Access-Control-Allow-Origin', '*');
           return res;
         },

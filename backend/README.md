@@ -4,20 +4,18 @@ This is a [Nest](https://github.com/nestjs/nest) application using [Express](htt
 
 ## Installation
 
-Go to the repository root and run:
-
-```
-rush install
+```bash
+$ npm install
 ```
 
 ## Running the app
 
 ```bash
-# development mode
-npm run start
+# development
+$ npm run start
 
 # production mode
-npm run build && npm run start:prod
+$ npm run start:prod
 ```
 
 ## Test
