@@ -3,23 +3,23 @@ on: [push]
 jobs:
   test-backend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
-        working-directory: backend
       - run: npm run lint
-        working-directory: backend
       - run: npm run test
-        working-directory: backend
   test-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
-        working-directory: frontend
       - run: npm run lint
-        working-directory: frontend
       - run: npm run test
-        working-directory: frontend
