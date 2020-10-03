@@ -5,6 +5,7 @@ export * from './api/room-actions';
 export * from './api/room-events';
 export * from './api/stack-actions';
 export * from './api/stack-events';
+export * from './model/error-enum';
 export * from './model/error-response';
 export * from './model/game';
 export * from './model/game-shapes';

@@ -1,16 +1,11 @@
-enum ErrorEnum {
-  validation = 'validation',
-  unexpected = 'unexpected',
-}
+import { ErrorEnum } from './error-enum';
 
 /**
  * Server Error Message
  */
-export class ErrorResponse {
-  /** Error codes available */
-  static errors = ErrorEnum;
+export interface ErrorResponse {
   /** Error code */
-  error!: ErrorEnum;
+  error: ErrorEnum;
   /** Error message */
-  message!: string;
+  message: string;
 }
