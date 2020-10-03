@@ -6,12 +6,10 @@
   "license": "AGPL-3.0-or-later",
   "private": "true",
   "scripts": {
-    "start": "npm-run-all --print-label build-common --parallel start-*",
-    "build": "npm-run-all --print-label build-common --parallel build-frontend build-backend",
-    "build-common": "cd common && npm run build",
+    "start": "npm-run-all -p -l start-*",
+    "build": "npm-run-all -p -l build-frontend build-backend",
     "build-backend": "cd backend && npm run build",
     "build-frontend": "cd frontend && npm run build",
-    "start-common": "cd common && npm start",
     "start-backend": "cd backend && npm run start",
     "start-frontend": "cd frontend && npm start"
   },
