@@ -18,4 +18,4 @@ export * from './model/stack';
 export * from './model/token';
 export * from './model/token-template';
 export * from './model/token-translation';
-export * from './types';
+export * from './types/partial-model';

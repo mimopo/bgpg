@@ -1,4 +1,4 @@
-import { Token } from "../model/token";
+import { Token } from '../model/token';
 
 /**
  * Player's hand available events
@@ -14,5 +14,5 @@ export interface HandEvents {
    * Token removed by another Player from your hand
    * @param tokenId
    */
-  tokenRemoved(tokenId: Token["id"]): void;
+  tokenRemoved(tokenId: Token['id']): void;
 }

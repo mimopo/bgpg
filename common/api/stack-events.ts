@@ -1,6 +1,6 @@
-import { Stack } from "../model/stack";
-import { Token } from "../model/token";
-import { PartialModel } from "../types";
+import { Stack } from '../model/stack';
+import { Token } from '../model/token';
+import { PartialModel } from '../types/partial-model';
 
 /**
  * Available stack events to listen
@@ -16,7 +16,7 @@ export interface StackEvents {
    * Stack removed
    * @param stackId
    */
-  stackRemoved(stackId: Stack["id"]): void;
+  stackRemoved(stackId: Stack['id']): void;
 
   /**
    * Stack updated
@@ -34,5 +34,5 @@ export interface StackEvents {
    * Token removed
    * @param stackId
    */
-  tokenRemoved(stackId: Stack["id"]): void;
+  tokenRemoved(stackId: Stack['id']): void;
 }

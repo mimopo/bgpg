@@ -1,7 +1,7 @@
-import { Game } from "../model/game";
-import { Player } from "../model/player";
-import { Token } from "../model/token";
-import { PartialModel } from "../types";
+import { Game } from '../model/game';
+import { Player } from '../model/player';
+import { Token } from '../model/token';
+import { PartialModel } from '../types/partial-model';
 
 /**
  * Available events to listen into the Room
@@ -17,7 +17,7 @@ export interface RoomEvents {
    * Another player left the room
    * @param playerId
    */
-  playerLeft(playerId: Player["id"]): void;
+  playerLeft(playerId: Player['id']): void;
 
   /**
    * Another player has updated their data (position, name, avatar...)

@@ -1,8 +1,8 @@
-import { TokenTranslation } from "./token-translation";
+import { TokenTranslation } from './token-translation';
 
 /**
  * Game object translations
- * 
+ *
  * This interface is converted to json-schema using typescript-json-schema
  * @see https://github.com/YousefED/typescript-json-schema#readme
  */

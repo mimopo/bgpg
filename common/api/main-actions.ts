@@ -1,5 +1,5 @@
-import { Game } from "../model/game";
-import { Room } from "../model/room";
+import { Game } from '../model/game';
+import { Room } from '../model/room';
 
 /**
  * Available actions to perform outside the room
@@ -14,11 +14,11 @@ export interface MainActions {
    * Join into a room
    * @param roomId
    */
-  joinRoom(roomId: Room["id"]): Promise<Room>;
+  joinRoom(roomId: Room['id']): Promise<Room>;
 
   /**
    * List available games
    * @param search Optional query string to filter the list
    */
-  getGames(search?: string): Promise<Pick<Game, "id" | "title" | "url">[]>;
+  getGames(search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]>;
 }

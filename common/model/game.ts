@@ -1,5 +1,5 @@
-import { Resource } from "./resource";
-import { TokenTemplate } from "./token-template";
+import { Resource } from './resource';
+import { TokenTemplate } from './token-template';
 
 /**
  * Game box containing all the tokens that you need to play
@@ -47,7 +47,7 @@ export interface Game {
 
   /**
    * A dictionary of language URLs using the locale as index.
-   * 
+   *
    * @minProperties 1
    * @todo Improve json-schema definition
    */
