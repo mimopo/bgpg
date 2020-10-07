@@ -7,13 +7,19 @@
   "private": "true",
   "scripts": {
     "start": "npm-run-all -p -l start-*",
-    "build": "npm-run-all -p -l build-frontend build-backend",
+    "build": "npm-run-all -p -l build-frontend build-backend schema-*",
     "build-backend": "npm --prefix=backend run build",
     "build-frontend": "npm --prefix=frontend run build",
     "start-backend": "npm --prefix=backend run start",
-    "start-frontend": "npm --prefix=frontend start"
+    "start-frontend": "npm --prefix=frontend run start",
+    "schema-game": "typescript-json-schema backend/src/common/model/game.ts Game --required -o schema/schema-game.json",
+    "schema-shapes": "typescript-json-schema backend/src/common/model/game-shapes.ts GameShapes --required -o schema/schema-shape.json",
+    "schema-translation": "typescript-json-schema backend/src/common/model/game-translation.ts GameTranslation --required -o schema/schema-translation.json"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
-  }
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.2",
+    "typescript-json-schema": "^0.43.0"
+  },
+  "dependencies": {}
 }
