@@ -1,13 +1,12 @@
-import { ConfigModule } from '@nestjs/config/dist/config.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Room } from './entities/room.entity';
+import { MainGateway } from './gateways/main.gateway';
 
 @Module({
-  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), TypeOrmModule.forFeature([])],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Room])],
+  controllers: [],
+  providers: [MainGateway],
 })
 export class AppModule {}
