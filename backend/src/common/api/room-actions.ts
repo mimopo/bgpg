@@ -2,7 +2,7 @@ import { Game } from '../model/game';
 import { Player } from '../model/player';
 import { Room } from '../model/room';
 import { Token } from '../model/token';
-import { PartialModel } from '../types/partial-model';
+import { ModelUpdate } from '../types/model-update';
 
 /**
  * Available actions to perform into the Room
@@ -41,13 +41,13 @@ export interface RoomActions {
    * @param tokenId
    * @returns Token properties changed
    */
-  roll(tokenId: Token['id']): Promise<PartialModel<Token>>;
+  roll(tokenId: Token['id']): Promise<ModelUpdate<Token>>;
 
   /**
    * Flip a token, it will change the face to it's next face.
    * @param tokenId
    */
-  flip(tokenId: Token['id']): Promise<PartialModel<Token>>;
+  flip(tokenId: Token['id']): Promise<ModelUpdate<Token>>;
 
   /**
    * Move token

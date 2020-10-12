@@ -1,7 +1,7 @@
 import { Game } from '../model/game';
 import { Player } from '../model/player';
 import { Token } from '../model/token';
-import { PartialModel } from '../types/partial-model';
+import { ModelUpdate } from '../types/model-update';
 
 /**
  * Available events to listen into the Room
@@ -23,7 +23,7 @@ export interface RoomEvents {
    * Another player has updated their data (position, name, avatar...)
    * @param player A partial Player object with the updated properties
    */
-  playerUpdated(player: PartialModel<Player>): void;
+  playerUpdated(player: ModelUpdate<Player>): void;
 
   /**
    * Game changed by another player
@@ -35,7 +35,7 @@ export interface RoomEvents {
    * Token updated by another player (moved, flipped, rolled, rotation, etc.)
    * @param token A partial Token object with the updated properties
    */
-  tokenUpdated(token: PartialModel<Token>): void;
+  tokenUpdated(token: ModelUpdate<Token>): void;
 
   /**
    * Log message

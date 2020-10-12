@@ -1,6 +1,6 @@
 import { Stack } from '../model/stack';
 import { Token } from '../model/token';
-import { PartialModel } from '../types/partial-model';
+import { ModelUpdate } from '../types/model-update';
 
 /**
  * Available stack events to listen
@@ -22,7 +22,7 @@ export interface StackEvents {
    * Stack updated
    * @param stack A partial Stack object with the updated properties
    */
-  stackUpdated(stack: PartialModel<Stack>): void;
+  stackUpdated(stack: ModelUpdate<Stack>): void;
 
   /**
    * Token added
