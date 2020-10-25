@@ -18,15 +18,16 @@ import { RoomService } from '../services/room/room.service';
 @WebSocketGateway()
 export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() private server!: Server;
+  private readonly logger = new Logger('MainGateway');
 
   constructor(private roomService: RoomService) {}
 
   handleConnection(@ConnectedSocket() client: Socket) {
-    Logger.verbose(`Client connected    - ${client.id}`, 'MainGateway');
+    this.logger.verbose(`Client connected    - ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    Logger.verbose(`Client disconnected - ${client.id}`, 'MainGateway');
+    this.logger.verbose(`Client disconnected - ${client.id}`);
   }
 
   @SubscribeMessage('createRoom')

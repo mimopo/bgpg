@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import * as io from 'socket.io-client';
 import { Connection } from 'typeorm';
 
@@ -15,6 +15,7 @@ describe('MainGateway (e2e)', () => {
   let client2: SocketIOClient.Socket;
 
   beforeAll(async () => {
+    Logger.overrideLogger(['error']);
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
