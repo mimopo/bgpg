@@ -1,4 +1,12 @@
-import { ConnectedSocket, MessageBody, OnGatewayConnection, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Logger } from '@nestjs/common';
+import {
+  ConnectedSocket,
+  MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
 
@@ -8,13 +16,17 @@ import { Room } from '../common/model/room';
 import { RoomService } from '../services/room/room.service';
 
 @WebSocketGateway()
-export class MainGateway implements OnGatewayConnection {
+export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() private server!: Server;
 
   constructor(private roomService: RoomService) {}
 
   handleConnection(@ConnectedSocket() client: Socket) {
-    console.log('client', client.id);
+    Logger.verbose(`Client connected    - ${client.id}`, 'MainGateway');
+  }
+
+  handleDisconnect(client: Socket) {
+    Logger.verbose(`Client disconnected - ${client.id}`, 'MainGateway');
   }
 
   @SubscribeMessage('createRoom')
