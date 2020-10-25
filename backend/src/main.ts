@@ -33,6 +33,6 @@ async function bootstrap() {
     );
   });
   // Listen
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.BGPG_PORT || 3000);
 }
 bootstrap();

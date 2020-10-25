@@ -3,6 +3,15 @@ on: [push]
 jobs:
   test-backend:
     runs-on: ubuntu-latest
+    env:
+      BGPG_TYPEORM_HOST: mongo
+      BGPG_TYPEORM_DATABASE: bgpg
+      BGPG_TYPEORM_SYNCHRONIZE: true
+    services:
+      mongo:
+        image: mongo
+        env:
+          MONGO_INITDB_DATABASE: bgpg
     defaults:
       run:
         working-directory: backend
