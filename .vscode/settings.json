@@ -16,5 +16,6 @@
   "yaml.schemas": {
     "http://json.schemastore.org/github-workflow": ["**/.github/workflows/*.yml"],
     "http://json.schemastore.org/github-action": ["action.yml"]
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "relative"
 }
