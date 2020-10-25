@@ -1,37 +1,19 @@
-import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as express from 'express';
+import { NestFactory } from '@nestjs/core';
 import { join } from 'path';
-import { existsSync } from 'fs';
-import { ServerResponse } from 'http';
-import { Logger } from '@nestjs/common';
-
-// Static directories to serve
-const STATICS = [{ url: '/', path: join(__dirname, '..', 'static') }];
-const FRONTEND_PATH = join(__dirname, '..', 'frontend');
-// Serve the frontend app (when running inside docker)
-if (existsSync(FRONTEND_PATH)) {
-  STATICS.push({ url: '/', path: FRONTEND_PATH });
-  STATICS.push({ url: '*', path: join(FRONTEND_PATH, 'index.html') });
-}
+import { serveStaticFiles } from './serve-static-files';
 
 // Nest bootstrap
 async function bootstrap() {
   // Create Nest App
   const app = await NestFactory.create(AppModule);
-  // Static files
-  STATICS.forEach(({ url, path }) => {
-    Logger.log(`Static route registered: ${url} -> ${path}`, 'StaticFiles');
-    app.use(
-      url,
-      express.static(path, {
-        setHeaders: (res: ServerResponse) => {
-          res.setHeader('Access-Control-Allow-Origin', '*');
-          return res;
-        },
-      }),
-    );
-  });
+  if (process.env.BGPG_SERVE_STATIC_FILES) {
+    serveStaticFiles(app, '/static', process.env.BGPG_SERVE_STATIC_FILES);
+  }
+  if (process.env.BGPG_SERVE_FRONTEND) {
+    serveStaticFiles(app, '/', process.env.BGPG_SERVE_FRONTEND);
+    serveStaticFiles(app, '*', join(process.env.BGPG_SERVE_FRONTEND, 'index.html'));
+  }
   // Listen
   await app.listen(process.env.BGPG_PORT || 3000);
 }
