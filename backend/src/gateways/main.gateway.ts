@@ -13,7 +13,9 @@ export class MainGateway implements OnGatewayConnection {
 
   constructor(private roomService: RoomService) {}
 
-  handleConnection(@ConnectedSocket() client: Socket) {}
+  handleConnection(@ConnectedSocket() client: Socket) {
+    console.log('client', client.id);
+  }
 
   @SubscribeMessage('createRoom')
   async createRoom(@ConnectedSocket() client: Socket): Promise<Room> {
@@ -28,7 +30,7 @@ export class MainGateway implements OnGatewayConnection {
   }
 
   getGames(search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented. Your search is ' + search);
   }
 
   private async join(room: Room, client: Socket): Promise<Room> {
