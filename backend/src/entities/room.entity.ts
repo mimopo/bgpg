@@ -1,15 +1,15 @@
-import { Player } from 'src/common/model/player';
+import { Transform, Type } from 'class-transformer';
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+
 import { Room as IRoom } from 'src/common/model/room';
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
 
 @Entity()
 export class Room implements IRoom {
   @ObjectIdColumn()
+  @Type(() => ObjectID)
+  @Transform(v => `${v}`)
   id!: string;
 
   @Column()
   name!: string;
-
-  @Column()
-  players: Player[] = [];
 }

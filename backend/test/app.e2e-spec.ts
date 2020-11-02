@@ -5,6 +5,7 @@ import { Connection } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
 import { Room } from '../src/common/model/room';
+import { Player } from '../src/common/model/player';
 
 const port = process.env.PORT || 3000;
 const client = () => io.connect(`http://localhost:${port}`, { transports: ['websocket'] });
@@ -40,22 +41,81 @@ describe('MainGateway (e2e)', () => {
 
   afterAll(async () => app.close());
 
+  it('database connection', () => {
+    expect(app.get(Connection).isConnected).toBeTruthy();
+  });
+
+  // GATEWAY
+
   it('connect', done => {
     client1.once('connect', () => done());
   });
 
-  it('createRoom: creates a room', done => {
-    client1.emit('createRoom', null, (room: Room) => {
-      expect(room).toMatchObject<Room>({ id: expect.any(String), name: expect.any(String), players: expect.any(Array) });
+  it('creates a user when connect', done => {
+    client1.once('hello', (player: Player) => {
+      expect(player).toEqual<Player>({
+        id: expect.any(String),
+        name: expect.any(String),
+      });
       done();
     });
   });
 
-  it('joinRoom: joins room', done => {
+  it('create a room', done => {
+    client1.emit('createRoom', null, (room: Room) => {
+      expect(room).toEqual<Room>({ id: expect.any(String), name: expect.any(String) });
+      done();
+    });
+  });
+
+  it('join room', done => {
     client1.emit('createRoom', null, (created: Room) => {
       client2.emit('joinRoom', created.id, (room: Room) => {
-        expect(room).toMatchObject(created);
+        expect(room).toEqual(created);
         done();
+      });
+    });
+  });
+
+  it('another player joins the room', done => {
+    client1.emit('createRoom', null, (created: Room) => {
+      client1.on('playerJoined', (player: Player) => {
+        expect(player).toEqual<Player>({
+          id: expect.any(String),
+          name: expect.any(String),
+        });
+        done();
+      });
+      client2.emit('joinRoom', created.id);
+    });
+  });
+
+  it('another player leaves the room', done => {
+    client1.emit('createRoom', null, (created: Room) => {
+      client1.on('playerJoined', (player: Player) => {
+        const id = player.id;
+        client1.on('playerLeft', (playerId: string) => {
+          expect(playerId).toBe(id);
+          done();
+        });
+      });
+      client2.emit('joinRoom', created.id, () => {
+        client2.emit('leaveRoom');
+      });
+    });
+  });
+
+  it('another player leaves the room when disconnected', done => {
+    client1.emit('createRoom', null, (created: Room) => {
+      client1.on('playerJoined', (player: Player) => {
+        const id = player.id;
+        client1.on('playerLeft', (playerId: string) => {
+          expect(playerId).toBe(id);
+          done();
+        });
+      });
+      client2.emit('joinRoom', created.id, () => {
+        client2.disconnect();
       });
     });
   });

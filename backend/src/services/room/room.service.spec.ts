@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Room } from '../../entities/room.entity';
 import { RoomService } from './room.service';
 
-class RoomRepository implements Partial<Repository<any>> {
+class RoomRepositoryMock implements Partial<Repository<any>> {
   async save(room: any) {
     if (!room.id) {
       room.id = 'id';
@@ -31,7 +31,7 @@ describe('RoomService', () => {
         RoomService,
         {
           provide: getRepositoryToken(Room),
-          useClass: RoomRepository,
+          useClass: RoomRepositoryMock,
         },
       ],
     }).compile();
