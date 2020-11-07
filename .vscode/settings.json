@@ -11,11 +11,16 @@
     "**/dist": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll.tslint": true,
+    "source.fixAll.eslint": true
   },
   "yaml.schemas": {
     "http://json.schemastore.org/github-workflow": ["**/.github/workflows/*.yml"],
     "http://json.schemastore.org/github-action": ["action.yml"]
   },
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "tslint.exclude": ["./backend/**"],
+  "eslint.workingDirectories": ["./backend"],
+  "eslint.probe": ["typescript"],
+  "eslint.nodePath": "./backend/node_modules"
 }

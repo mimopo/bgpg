@@ -41,6 +41,15 @@ Just follow these steps:
 
 TODO
 
+## Development Environment
+
+This project comes with VSCode configurations. Please, enable the recommended extensions to get full advantages.
+
+### VSCode doesn't run eslint on backend files
+
+You have to approve the ESLint execution, just open the command palette and run "ESLint: Manage Library Execution". More info at
+https://github.com/microsoft/vscode-eslint#version-2110
+
 ## License
 
 BGPG project is open source and licensed under [AGPL-3.0](LICENSE) license.
