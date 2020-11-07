@@ -43,20 +43,20 @@ describe('RoomService', () => {
     expect(service).toBeDefined();
   });
 
-  it('create() returns a Room', () => {
+  it('create: returns a Room', () => {
     return expect(service.create()).resolves.toBeInstanceOf(Room);
   });
 
-  it('find() returns a Room', () => {
+  it('find: returns a Room', () => {
     return expect(service.find('success')).resolves.toBeInstanceOf(Room);
   });
 
-  it('find() returns a Room with the same id', () => {
+  it('find: returns a Room with the same id', () => {
     const id = 'success';
     return expect(service.find(id)).resolves.toHaveProperty('id', id);
   });
 
-  it('find() throws exceptions when roomId not found', () => {
+  it('find: throws exceptions when roomId not found', () => {
     return expect(service.find('fail')).rejects.toBeDefined();
   });
 });

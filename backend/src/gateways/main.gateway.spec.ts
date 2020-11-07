@@ -1,99 +1,151 @@
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Socket } from 'socket.io';
-import { Player } from '../entities/player.entity';
 
+import { Player } from '../entities/player.entity';
 import { Room } from '../entities/room.entity';
 import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
+import { SocketUtils } from '../utils/socket-utils';
 import { MainGateway } from './main.gateway';
 
-class RoomServiceMock implements Partial<RoomService> {
-  async create() {
-    return new Room();
-  }
-  async find(roomId: string) {
-    const room = new Room();
-    room.id = roomId;
-    return room;
-  }
-}
-
-class PlayerServiceMock implements Partial<PlayerService> {
-  async create() {
-    return new Player();
-  }
-  async joinRoom(player: Player, roomId: string) {
-    player.roomId = roomId;
-    return player;
-  }
-  async leaveRoom(player: Player) {
-    player.roomId = undefined;
-    return player;
-  }
-  async find() {
-    return new Player();
-  }
-}
-
-class SocketMock {
-  join(room: any, callback?: any) {
-    if (callback) {
-      callback();
-    }
-    return this;
-  }
-  in() {
-    return this;
-  }
-  emit(event: any, message: any, ack: any) {
-    if (ack) {
-      ack();
-    }
-    return true;
-  }
-}
+jest.mock('../services/player/player.service');
+jest.mock('../services/room/room.service');
 
 describe('MainGateway', () => {
   let gateway: MainGateway;
-  let client: Socket;
+  let module: TestingModule;
+  let client: any;
+
+  function mockPlayerServiceFind(mock: Partial<Player>) {
+    jest.spyOn(module.get(PlayerService), 'find').mockResolvedValue(mock as Player);
+  }
+
+  beforeAll(() => {
+    Logger.overrideLogger(['error']);
+    jest.spyOn(SocketUtils, 'emit').mockImplementation((): any => {});
+    jest.spyOn(SocketUtils, 'join').mockImplementation((): any => {});
+    jest.spyOn(SocketUtils, 'leave').mockImplementation((): any => {});
+  });
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MainGateway,
-        { provide: RoomService, useClass: RoomServiceMock },
-        { provide: PlayerService, useClass: PlayerServiceMock },
-      ],
+    module = await Test.createTestingModule({
+      providers: [MainGateway, PlayerService, RoomService],
     }).compile();
 
-    gateway = module.get<MainGateway>(MainGateway);
-    client = new SocketMock() as any;
-    // gateway['server'] = jest.fn().mockImplementation(() => {
-    //   return { emit: jest.fn().mockReturnThis() };
-    // }) as any;
+    gateway = module.get(MainGateway);
+    client = {
+      id: 'socketId',
+      in: () => {},
+    };
+    jest.clearAllMocks();
+    jest.spyOn(module.get(RoomService), 'create').mockResolvedValue(new Room());
+    jest.spyOn(module.get(RoomService), 'find').mockResolvedValue(new Room());
+    jest.spyOn(module.get(PlayerService), 'create').mockResolvedValue(new Player());
+    jest.spyOn(module.get(PlayerService), 'find').mockResolvedValue(new Player());
   });
 
   it('should be defined', () => {
     expect(gateway).toBeDefined();
   });
 
-  // it('should emit hello on connection', done => {
-  //   gateway.handleConnection(client).then(() => {
-  //     expect(gateway['server'].emit).toHaveBeenCalled();
-  //     done();
-  //   });
-  // });
-
-  it('createRoom() returns a Room', async () => {
-    return gateway.createRoom(client).then(room => expect(room).toBeInstanceOf(Room));
+  it('handleConnection: creates a Player', done => {
+    gateway.handleConnection(client).then(() => {
+      expect(module.get(PlayerService).create).toBeCalledWith(client.id);
+      done();
+    });
   });
 
-  it('joinRoom() returns a Room', async () => {
-    return gateway.joinRoom('success', client).then(room => expect(room).toBeInstanceOf(Room));
+  it('handleConnection: emits hello', done => {
+    gateway.handleConnection(client).then(() => {
+      expect(SocketUtils.emit).toHaveBeenLastCalledWith(null, 'hello', expect.any(Player));
+      done();
+    });
   });
 
-  it('joinRoom() returns a Room with the same id', async () => {
-    const roomId = 'success';
-    return gateway.joinRoom('success', client).then(room => expect(room.id).toBe(roomId));
+  it('handleDisconnect: emits playerLeft if its in a room', done => {
+    mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as Player);
+    gateway.handleDisconnect(client).then(() => {
+      expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerLeft', 'playerId');
+      done();
+    });
+  });
+
+  it('handleDisconnect: removes the Player', done => {
+    mockPlayerServiceFind({ id: 'playerId' } as Player);
+    gateway.handleDisconnect(client).then(() => {
+      expect(module.get(PlayerService).remove).toBeCalledWith('playerId');
+      done();
+    });
+  });
+
+  it('createRoom: creates a Room', done => {
+    gateway.createRoom(client).then(() => {
+      expect(module.get(RoomService).create).toBeCalled();
+      done();
+    });
+  });
+
+  it('createRoom: joins into the Socket room', done => {
+    const service = module.get(RoomService);
+    jest.spyOn(service, 'create').mockResolvedValue({ id: 'roomId' } as Room);
+    gateway.createRoom(client).then(() => {
+      expect(SocketUtils.join).toBeCalledWith(client, 'roomId');
+      done();
+    });
+  });
+
+  it('createRoom: returns a Room', () => {
+    return expect(gateway.createRoom(client)).resolves.toBeInstanceOf(Room);
+  });
+
+  it('joinRoom: joins to the socket room', done => {
+    gateway.joinRoom('success', client).then(() => {
+      expect(SocketUtils.join).toHaveBeenLastCalledWith(client, expect.any(String));
+      done();
+    });
+  });
+
+  it('joinRoom: emits playerJoined with a Player', done => {
+    gateway.joinRoom('success', client).then(() => {
+      expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerJoined', expect.any(Player));
+      done();
+    });
+  });
+
+  it('joinRoom: returns a Room', () => {
+    return expect(gateway.joinRoom('success', client)).resolves.toBeInstanceOf(Room);
+  });
+
+  it('leaveRoom: throws exception if the player isnt in a room', () => {
+    return expect(gateway.leaveRoom(client)).rejects.toBeDefined();
+  });
+
+  it('leaveRoom: emits playerLeft with a player id', done => {
+    mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
+    gateway.leaveRoom(client).then(() => {
+      expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerLeft', expect.any(String));
+      done();
+    });
+  });
+
+  it('leaveRoom: leaves the socket room', done => {
+    mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
+    gateway.leaveRoom(client).then(() => {
+      expect(SocketUtils.leave).toHaveBeenLastCalledWith(client, expect.any(String));
+      done();
+    });
+  });
+
+  it('leaveRoom: leaves the the room', done => {
+    const service = module.get(PlayerService);
+    mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
+    gateway.leaveRoom(client).then(() => {
+      expect(jest.spyOn(service, 'leaveRoom')).toBeCalled();
+      done();
+    });
+  });
+
+  it('getGames: throws exception', async () => {
+    return expect(gateway.getGames()).rejects.toBeDefined();
   });
 });

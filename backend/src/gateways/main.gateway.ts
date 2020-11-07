@@ -8,13 +8,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
-import { classToPlain } from 'class-transformer';
 import { Server, Socket } from 'socket.io';
 
 import { Game } from '../common/model/game';
 import { Room } from '../common/model/room';
 import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
+import { SocketUtils } from '../utils/socket-utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -27,24 +27,24 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(@ConnectedSocket() client: Socket) {
     this.logger.verbose(`Client connected    - ${client.id}`);
     const player = await this.playerService.create(client.id);
-    this.emit(this.server, 'hello', player);
+    SocketUtils.emit(this.server, 'hello', player);
   }
 
   async handleDisconnect(client: Socket) {
     this.logger.verbose(`Client disconnected - ${client.id}`);
-    try {
-      const player = await this.playerService.find(client.id);
-      if (player.roomId) {
-        this.emit(client.in(player.roomId), 'playerLeft', player.id);
-      }
-      await this.playerService.remove(player.id);
-    } catch (e) {}
+    const player = await this.playerService.find(client.id);
+    if (player.roomId) {
+      try {
+        SocketUtils.emit(client.in(player.roomId), 'playerLeft', player.id);
+      } catch (e) {}
+    }
+    await this.playerService.remove(player.id);
   }
 
   @SubscribeMessage('createRoom')
   async createRoom(@ConnectedSocket() client: Socket): Promise<Room> {
     const room = await this.roomService.create();
-    await this.join(room.id, client);
+    await SocketUtils.join(client, room.id);
     return room;
   }
 
@@ -53,8 +53,8 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const room = await this.roomService.find(roomId);
     const player = await this.playerService.find(client.id);
     await this.playerService.joinRoom(player, roomId);
-    await this.join(roomId, client);
-    this.emit(client.in(roomId), 'playerJoined', player);
+    await SocketUtils.join(client, roomId);
+    SocketUtils.emit(client.in(roomId), 'playerJoined', player);
     return room;
   }
 
@@ -66,36 +66,11 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new Error(`Player isn't in a room`);
     }
     await this.playerService.leaveRoom(player);
-    this.emit(client.in(roomId), 'playerLeft', player.id);
-    return this.leave(roomId, client);
+    SocketUtils.emit(client.in(roomId), 'playerLeft', player.id);
+    return SocketUtils.leave(client, roomId);
   }
 
-  getGames(search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
-    throw new Error('Method not implemented. Your search is ' + search);
-  }
-
-  private async join(roomId: string, client: Socket): Promise<void> {
-    return new Promise((resolve, reject) => {
-      client.join(roomId, e => {
-        e ? reject(e) : resolve();
-      });
-    });
-  }
-
-  private async leave(roomId: string, client: Socket): Promise<void> {
-    return new Promise((resolve, reject) => {
-      client.leave(roomId, (e: any) => {
-        e ? reject(e) : resolve();
-      });
-    });
-  }
-
-  private emit(socket: { emit: Socket['emit'] | Server['emit'] }, event: string, data?: any, ack?: () => void): boolean {
-    const message = data !== null && typeof data === 'object' ? classToPlain(data) : data;
-    if (ack) {
-      return !!socket.emit(event, message, ack);
-    } else {
-      return !!socket.emit(event, message);
-    }
+  async getGames(search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
+    throw new Error('Method not implemented. Search: ' + search);
   }
 }
