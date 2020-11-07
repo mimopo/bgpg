@@ -3,8 +3,8 @@ import * as classTransformer from 'class-transformer';
 import { SocketUtils } from './socket-utils';
 
 describe('SocketUtils', () => {
-  let emitter = { emit: () => {} } as any;
-  let client = { join: jest.fn(), leave: jest.fn() };
+  const emitter = { emit: jest.fn() } as any;
+  const client = { join: jest.fn(), leave: jest.fn() };
 
   beforeAll(() => {
     jest.spyOn(emitter, 'emit').mockReturnValue(true);
@@ -32,6 +32,7 @@ describe('SocketUtils', () => {
   });
 
   it('emit: emits events with ack', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     SocketUtils.emit(emitter, 'event', 'data', () => {});
     expect(emitter.emit).toBeCalledWith('event', 'data', expect.any(Function));
   });

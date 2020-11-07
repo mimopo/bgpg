@@ -22,9 +22,9 @@ describe('MainGateway', () => {
 
   beforeAll(() => {
     Logger.overrideLogger(['error']);
-    jest.spyOn(SocketUtils, 'emit').mockImplementation((): any => {});
-    jest.spyOn(SocketUtils, 'join').mockImplementation((): any => {});
-    jest.spyOn(SocketUtils, 'leave').mockImplementation((): any => {});
+    jest.spyOn(SocketUtils, 'emit').mockImplementation();
+    jest.spyOn(SocketUtils, 'join').mockImplementation();
+    jest.spyOn(SocketUtils, 'leave').mockImplementation();
   });
 
   beforeEach(async () => {
@@ -35,7 +35,7 @@ describe('MainGateway', () => {
     gateway = module.get(MainGateway);
     client = {
       id: 'socketId',
-      in: () => {},
+      in: jest.fn(),
     };
     jest.clearAllMocks();
     jest.spyOn(module.get(RoomService), 'create').mockResolvedValue(new Room());

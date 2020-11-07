@@ -21,7 +21,7 @@ class PlayerRepositoryMock implements Partial<Repository<any>> {
     player.id = id;
     return player;
   }
-  async delete(criteria: any): Promise<any> {
+  async delete(): Promise<any> {
     return;
   }
 }
