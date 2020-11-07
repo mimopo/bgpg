@@ -32,13 +32,13 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket) {
     this.logger.verbose(`Client disconnected - ${client.id}`);
-    const player = await this.playerService.find(client.id);
-    if (player.roomId) {
-      try {
+    try {
+      const player = await this.playerService.find(client.id);
+      if (player.roomId) {
         SocketUtils.emit(client.in(player.roomId), 'playerLeft', player.id);
-      } catch (e) {}
-    }
-    await this.playerService.remove(player.id);
+      }
+      await this.playerService.remove(player.id);
+    } catch (e) {}
   }
 
   @SubscribeMessage('createRoom')

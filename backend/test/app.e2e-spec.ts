@@ -47,7 +47,7 @@ describe('MainGateway (e2e)', () => {
 
   // GATEWAY
 
-  it('connect', done => {
+  it('client connection', done => {
     client1.once('connect', () => done());
   });
 
@@ -61,14 +61,14 @@ describe('MainGateway (e2e)', () => {
     });
   });
 
-  it('create a room', done => {
+  it('creates a room', done => {
     client1.emit('createRoom', null, (room: Room) => {
       expect(room).toEqual<Room>({ id: expect.any(String), name: expect.any(String) });
       done();
     });
   });
 
-  it('join room', done => {
+  it('joins into a room', done => {
     client1.emit('createRoom', null, (created: Room) => {
       client2.emit('joinRoom', created.id, (room: Room) => {
         expect(room).toEqual(created);
