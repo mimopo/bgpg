@@ -1,10 +1,11 @@
 import { Game } from '../model/game';
 import { Room } from '../model/room';
+import { ActionsType } from '../types/actions-type';
 
 /**
  * Available actions to perform outside the room
  */
-export interface MainActions {
+export interface MainActions extends ActionsType {
   /**
    * Create an empty room
    */
