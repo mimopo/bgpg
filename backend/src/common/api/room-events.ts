@@ -2,11 +2,12 @@ import { Game } from '../model/game';
 import { Player } from '../model/player';
 import { Token } from '../model/token';
 import { ModelUpdate } from '../types/model-update';
+import { EventsType } from '../types/events-type';
 
 /**
  * Available events to listen into the Room
  */
-export interface RoomEvents {
+export interface RoomEvents extends EventsType {
   /**
    * Another player joined into the room
    * @param player

@@ -1,11 +1,12 @@
 import { Stack } from '../model/stack';
 import { Token } from '../model/token';
 import { ModelUpdate } from '../types/model-update';
+import { EventsType } from '../types/events-type';
 
 /**
  * Available stack events to listen
  */
-export interface StackEvents {
+export interface StackEvents extends EventsType {
   /**
    * Stack created
    * @param stack
