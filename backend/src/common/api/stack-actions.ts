@@ -1,6 +1,5 @@
 import { Stack } from '../model/stack';
 import { Token } from '../model/token';
-import { ActionsType } from '../types/actions-type';
 
 type PullResponse = { token: Token; stack: Stack };
 type DivideResponse = { modified: Stack; created: Stack };
@@ -8,7 +7,7 @@ type DivideResponse = { modified: Stack; created: Stack };
 /**
  * Available actions to perform with stacks
  */
-export interface StackActions extends ActionsType {
+export interface StackActions {
   /**
    * Randomize tokens
    * @param stackId

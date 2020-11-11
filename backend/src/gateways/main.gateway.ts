@@ -1,30 +1,25 @@
 import { ClassSerializerInterceptor, Logger, UseInterceptors } from '@nestjs/common';
-import {
-  ConnectedSocket,
-  MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
 
+import { MainActions } from '../common/api/main-actions';
 import { Game } from '../common/model/game';
 import { Room } from '../common/model/room';
+import { Gateway } from '../common/types/gateway';
 import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
-export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Gateway<MainActions> {
   @WebSocketServer() private server!: Server;
   private readonly logger = new Logger('MainGateway');
 
   constructor(private roomService: RoomService, private playerService: PlayerService) {}
 
-  async handleConnection(@ConnectedSocket() client: Socket) {
+  async handleConnection(client: Socket) {
     this.logger.verbose(`Client connected    - ${client.id}`);
     const player = await this.playerService.create(client.id);
     SocketUtils.emit(this.server, 'hello', player);
@@ -42,14 +37,14 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('createRoom')
-  async createRoom(@ConnectedSocket() client: Socket): Promise<Room> {
+  async createRoom(client: Socket): Promise<Room> {
     const room = await this.roomService.create();
     await SocketUtils.join(client, room.id);
     return room;
   }
 
   @SubscribeMessage('joinRoom')
-  async joinRoom(@MessageBody() roomId: string, @ConnectedSocket() client: Socket): Promise<Room> {
+  async joinRoom(client: Socket, roomId: string): Promise<Room> {
     const room = await this.roomService.find(roomId);
     const player = await this.playerService.find(client.id);
     await this.playerService.joinRoom(player, roomId);
@@ -59,7 +54,7 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('leaveRoom')
-  async leaveRoom(@ConnectedSocket() client: Socket): Promise<void> {
+  async leaveRoom(client: Socket): Promise<void> {
     const player = await this.playerService.find(client.id);
     const roomId = player.roomId;
     if (!roomId) {
@@ -70,7 +65,7 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return SocketUtils.leave(client, roomId);
   }
 
-  async getGames(search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
+  async getGames(client: Socket, search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
     throw new Error('Method not implemented. Search: ' + search);
   }
 }

@@ -99,21 +99,21 @@ describe('MainGateway', () => {
   });
 
   it('joinRoom: joins to the socket room', done => {
-    gateway.joinRoom('success', client).then(() => {
+    gateway.joinRoom(client, 'success').then(() => {
       expect(SocketUtils.join).toHaveBeenLastCalledWith(client, expect.any(String));
       done();
     });
   });
 
   it('joinRoom: emits playerJoined with a Player', done => {
-    gateway.joinRoom('success', client).then(() => {
+    gateway.joinRoom(client, 'success').then(() => {
       expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerJoined', expect.any(Player));
       done();
     });
   });
 
   it('joinRoom: returns a Room', () => {
-    return expect(gateway.joinRoom('success', client)).resolves.toBeInstanceOf(Room);
+    return expect(gateway.joinRoom(client, 'success')).resolves.toBeInstanceOf(Room);
   });
 
   it('leaveRoom: throws exception if the player isnt in a room', () => {
@@ -146,6 +146,6 @@ describe('MainGateway', () => {
   });
 
   it('getGames: throws exception', async () => {
-    return expect(gateway.getGames()).rejects.toBeDefined();
+    return expect(gateway.getGames(client)).rejects.toBeDefined();
   });
 });

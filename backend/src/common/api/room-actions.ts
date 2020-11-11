@@ -2,13 +2,12 @@ import { Game } from '../model/game';
 import { Player } from '../model/player';
 import { Room } from '../model/room';
 import { Token } from '../model/token';
-import { ActionsType } from '../types/actions-type';
 import { ModelUpdate } from '../types/model-update';
 
 /**
  * Available actions to perform into the Room
  */
-export interface RoomActions extends ActionsType {
+export interface RoomActions {
   /**
    * Updates the player's data
    */
