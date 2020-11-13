@@ -8,17 +8,17 @@ export interface MainActions {
   /**
    * Create an empty room
    */
-  createRoom(): Promise<Room>;
+  createRoom(): Room;
 
   /**
    * Join into a room
    * @param roomId
    */
-  joinRoom(roomId: Room['id']): Promise<Room>;
+  joinRoom(roomId: Room['id']): Room;
 
   /**
    * List available games
    * @param search Optional query string to filter the list
    */
-  getGames(search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]>;
+  getGames(search?: string): Pick<Game, 'id' | 'title' | 'url'>[];
 }

@@ -20,5 +20,5 @@ import { Socket } from 'socket.io';
  * ```
  */
 export type Gateway<T extends Record<string, any>> = {
-  [K in keyof T]: (client: Socket, ...args: Parameters<T[K]>) => ReturnType<T[K]>;
+  [K in keyof T]: (client: Socket, ...args: Parameters<T[K]>) => Promise<ReturnType<T[K]>>;
 };

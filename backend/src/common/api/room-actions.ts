@@ -11,43 +11,43 @@ export interface RoomActions {
   /**
    * Updates the player's data
    */
-  updatePlayer(player: Partial<Player>): Promise<void>;
+  updatePlayer(player: Partial<Player>): void;
 
   /**
    * Update a room data
    * @param room
    */
-  update(room: Room): Promise<Room>;
+  update(room: Room): Room;
 
   /**
    * Changes the current game
    * @param game
    */
-  changeGame(game: Game): Promise<void>;
+  changeGame(game: Game): void;
 
   /**
    * Leave room
    */
-  leave(): Promise<void>;
+  leave(): void;
 
   /**
    * Accept player joining into the room
    * @param playerId
    */
-  acceptPlayer(playerId: Player['id']): Promise<void>;
+  acceptPlayer(playerId: Player['id']): void;
 
   /**
    * Roll a token, it will get a random face.
    * @param tokenId
    * @returns Token properties changed
    */
-  roll(tokenId: Token['id']): Promise<ModelUpdate<Token>>;
+  roll(tokenId: Token['id']): ModelUpdate<Token>;
 
   /**
    * Flip a token, it will change the face to it's next face.
    * @param tokenId
    */
-  flip(tokenId: Token['id']): Promise<ModelUpdate<Token>>;
+  flip(tokenId: Token['id']): ModelUpdate<Token>;
 
   /**
    * Move token
@@ -55,12 +55,12 @@ export interface RoomActions {
    * @param x Horizontal position
    * @param y Vertical position
    */
-  move(tokenId: Token['id'], x: number, y: number): Promise<void>;
+  move(tokenId: Token['id'], x: number, y: number): void;
 
   /**
    * Rotate token
    * @param tokenId
    * @param degrees Rotation status in degrees, from 0 to 359
    */
-  rotate(tokenId: Token['id'], degrees: number): Promise<void>;
+  rotate(tokenId: Token['id'], degrees: number): void;
 }
