@@ -9,6 +9,10 @@ import { ErrorResponse } from 'bgpg/model/error-response';
 
 import { environment } from '../../environments/environment';
 
+/**
+ * Connects to the server using Socket.IO
+ * Use this service from other services, don't use it from components
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -20,10 +24,7 @@ export class SocketService {
   }
 
   constructor() {
-    const options: SocketIOClient.ConnectOpts = {};
-    if (environment.production) {
-      options.transports = ['websocket'];
-    }
+    const options: SocketIOClient.ConnectOpts = environment.connectOptions;
     this.socket = io.connect(environment.server, options);
   }
 
@@ -36,12 +37,13 @@ export class SocketService {
   }
 
   emit<K extends keyof Actions>(event: K, ...data: Parameters<Actions[K]>): void {
-    this.socket.emit(`${event}`, data);
+    this.socket.emit(`${event}`, ...data);
   }
 
+  // El tipo de la acción es una promesa pero quiero que devuelva el valor
   request<K extends keyof Actions, R = ReturnType<Actions[K]>>(event: K, ...data: Parameters<Actions[K]>): Observable<R> {
     const o = new Observable<R>((observer) => {
-      this.socket.emit(`${event}`, data, (response: R | ErrorResponse) => {
+      this.socket.emit(`${event}`, ...data, (response: R | ErrorResponse) => {
         if ((response as ErrorResponse).error) {
           observer.error(response);
         } else {
@@ -50,6 +52,6 @@ export class SocketService {
         }
       });
     });
-    return o.pipe(timeout(5000));
+    return o.pipe(timeout(environment.requestTimeout));
   }
 }

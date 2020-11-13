@@ -2,9 +2,15 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import { Environment } from '../types/environment';
+
+export const environment: Environment = {
   production: false,
   server: 'http://localhost:3000',
+  connectOptions: {
+    transports: ['websocket'],
+  },
+  requestTimeout: 1000,
 };
 
 /*
