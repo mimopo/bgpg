@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 import * as io from 'socket.io-client';
 
 import { ErrorResponse } from 'bgpg/model/error-response';
@@ -13,7 +13,6 @@ describe('SocketService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    environment.requestTimeout = 50;
     ioConnect = spyOn(io, 'connect').and.returnValue({
       emit: jasmine.createSpy(),
       on: jasmine.createSpy(),
@@ -79,12 +78,15 @@ describe('SocketService', () => {
     callback(error);
   });
 
-  it('request: emit error on timeout', (done) => {
+  it('request: emit error on timeout', fakeAsync(() => {
+    environment.requestTimeout = 50;
+    let error;
     service.request('createRoom').subscribe({
       error: (v) => {
-        expect(v).toBeTruthy();
-        done();
+        error = v;
       },
     });
-  });
+    tick(100);
+    expect(error).toBeTruthy();
+  }));
 });
