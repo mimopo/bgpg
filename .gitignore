@@ -72,3 +72,6 @@ Thumbs.db
 *.launch
 .settings/
 *.sublime-workspace
+
+# DOC
+/doc-dist

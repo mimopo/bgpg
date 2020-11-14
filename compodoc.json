@@ -1,0 +1,4 @@
+{
+  "$schema": "./node_modules/@compodoc/compodoc/src/config/schema.json",
+  "templates": "./doc/templates"
+}

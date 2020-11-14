@@ -6,6 +6,11 @@
   "license": "AGPL-3.0-or-later",
   "private": "true",
   "scripts": {
+    "doc-prune": "rimraf ./doc-dist/",
+    "doc-frontend": "compodoc ./frontend/src -c ./compodoc.json -p ./frontend/tsconfig.json -d ./doc-dist/frontend/ -n 'BGPG Frontend Documentation'",
+    "doc-backend": "compodoc ./backend/src -c ./compodoc.json -p ./backend/tsconfig.json -d ./doc-dist/backend/  -n 'BGPG Backend Documentation'",
+    "doc-common": "cp -R ./doc/index.html ./doc-dist/",
+    "doc": "npm-run-all -l 'doc-*'",
     "start": "npm-run-all -p -l start-*",
     "build": "npm-run-all -p -l build-frontend build-backend schema-*",
     "build-backend": "npm --prefix=backend run build",
@@ -17,8 +22,10 @@
     "schema-translation": "typescript-json-schema backend/src/common/model/game-translation.ts GameTranslation --required -o schema/schema-translation.json"
   },
   "devDependencies": {
+    "@compodoc/compodoc": "^1.1.11",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2",
+    "rimraf": "^3.0.2",
     "typescript-json-schema": "^0.43.0"
   },
   "dependencies": {}
