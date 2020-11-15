@@ -1,17 +1,18 @@
 import { classToPlain } from 'class-transformer';
 import { Namespace, Server, Socket } from 'socket.io';
+import { Events } from '../common/api/events';
 
 export type SocketIoEmitter = {
   emit: Socket['emit'] | Server['emit'] | Namespace['emit'];
 };
 
 export class SocketUtils {
-  static emit(socket: SocketIoEmitter, event: string, data?: any, ack?: () => void): boolean {
+  static emit<K extends keyof Events>(socket: SocketIoEmitter, event: K, data: Parameters<Events[K]>[0], ack?: () => void): boolean {
     const message = data !== null && typeof data === 'object' ? classToPlain(data) : data;
     if (ack) {
-      return !!socket.emit(event, message, ack);
+      return !!socket.emit(`${event}`, message, ack);
     } else {
-      return !!socket.emit(event, message);
+      return !!socket.emit(`${event}`, message);
     }
   }
 

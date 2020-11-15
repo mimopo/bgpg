@@ -1,10 +1,9 @@
 import { Token } from '../model/token';
-import { EventsType } from '../types/events-type';
 
 /**
  * Player's hand available events
  */
-export interface HandEvents extends EventsType {
+export interface HandEvents {
   /**
    * Token added by another Player to your hand
    * @param token

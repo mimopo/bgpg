@@ -1,6 +1,12 @@
 import { ErrorResponse } from '../model/error-response';
-import { EventsType } from '../types/events-type';
 
-export interface ErrorEvents extends EventsType {
+/**
+ * Available error-related events
+ */
+export interface ErrorEvents {
+  /**
+   * Exception emitted when no ack provided
+   * @see WsExceptionFilter
+   */
   exception(error: ErrorResponse): void;
 }

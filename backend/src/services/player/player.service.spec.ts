@@ -51,6 +51,10 @@ describe('PlayerService', () => {
     return expect(service.create('socketId')).resolves.toBeInstanceOf(Player);
   });
 
+  it('update: returns a Player', () => {
+    return expect(service.update({ id: 'success', name: 'foo' })).resolves.toBeInstanceOf(Player);
+  });
+
   it('find: returns a Player', () => {
     return expect(service.find('success')).resolves.toBeInstanceOf(Player);
   });

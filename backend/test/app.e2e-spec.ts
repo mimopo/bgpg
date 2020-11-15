@@ -61,6 +61,16 @@ describe('MainGateway (e2e)', () => {
     });
   });
 
+  it('updates the user name', done => {
+    client1.once('hello', (player: Player) => {
+      expect(player).toEqual<Player>({
+        id: expect.any(String),
+        name: expect.any(String),
+      });
+      done();
+    });
+  });
+
   it('creates a room', done => {
     client1.emit('createRoom', null, (room: Room) => {
       expect(room).toEqual<Room>({ id: expect.any(String), name: expect.any(String) });

@@ -1,4 +1,5 @@
 import * as classTransformer from 'class-transformer';
+import { Player } from '../entities/player.entity';
 
 import { SocketUtils } from './socket-utils';
 
@@ -14,27 +15,21 @@ describe('SocketUtils', () => {
     jest.clearAllMocks();
   });
 
-  it('emit: emits events without data', () => {
-    SocketUtils.emit(emitter, 'event');
-    expect(emitter.emit).toBeCalledWith('event', undefined);
-  });
-
   it('emit: emits events with data', () => {
-    SocketUtils.emit(emitter, 'event', 'data');
-    expect(emitter.emit).toBeCalledWith('event', 'data');
+    SocketUtils.emit(emitter, 'playerLeft', 'foo');
+    expect(emitter.emit).toBeCalledWith('playerLeft', 'foo');
   });
 
-  it('emit: serializes objects', () => {
-    const serialized = { foo: 'foo' };
-    jest.spyOn(classTransformer, 'classToPlain').mockReturnValue(serialized as any);
-    SocketUtils.emit(emitter, 'event', { foo: 'foo', bar: 'bar' });
-    expect(emitter.emit).toBeCalledWith('event', serialized);
+  it('emit: emits serialized objects', () => {
+    jest.spyOn(classTransformer, 'classToPlain').mockReturnValue('serialized' as any);
+    SocketUtils.emit(emitter, 'playerJoined', new Player());
+    expect(emitter.emit).toBeCalledWith('playerJoined', 'serialized');
   });
 
   it('emit: emits events with ack', () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    SocketUtils.emit(emitter, 'event', 'data', () => {});
-    expect(emitter.emit).toBeCalledWith('event', 'data', expect.any(Function));
+    SocketUtils.emit(emitter, 'playerLeft', 'foo', () => {});
+    expect(emitter.emit).toBeCalledWith('playerLeft', 'foo', expect.any(Function));
   });
 
   it('join: resolves on room join', () => {

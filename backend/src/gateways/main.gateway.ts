@@ -1,12 +1,14 @@
-import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
 
 import { MainActions } from '../common/api/main-actions';
 import { Game } from '../common/model/game';
+import { Player } from '../common/model/player';
 import { Room } from '../common/model/room';
 import { Gateway } from '../common/types/gateway';
+import { ModelUpdate } from '../common/types/model-update';
 import { WsExceptionFilter } from '../filters/ws-exception.filter';
 import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
@@ -69,5 +71,12 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
 
   async getGames(client: Socket, search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
     throw new Error('Method not implemented. Search: ' + search);
+  }
+
+  async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<void> {
+    const player = await this.playerService.update(update);
+    if (player.roomId) {
+      SocketUtils.emit(client.in(player.roomId), 'playerUpdated', update);
+    }
   }
 }

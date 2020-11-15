@@ -148,4 +148,20 @@ describe('MainGateway', () => {
   it('getGames: throws exception', async () => {
     return expect(gateway.getGames(client)).rejects.toBeDefined();
   });
+
+  it('updatePlayer: returns void', async () => {
+    const service = module.get(PlayerService);
+    jest.spyOn(service, 'update').mockResolvedValue(new Player());
+    return expect(gateway.updatePlayer(client, { id: 'foo', name: 'bar' })).resolves.toBeFalsy();
+  });
+
+  it('updatePlayer: emits player updated if player is in a room', done => {
+    const service = module.get(PlayerService);
+    const playerMock = { id: 'foo', roomId: 'bar' };
+    jest.spyOn(service, 'update').mockResolvedValue(playerMock as any);
+    gateway.updatePlayer(client, playerMock).then(() => {
+      expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerUpdated', playerMock);
+      done();
+    });
+  });
 });
