@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, Logger, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
@@ -7,11 +7,13 @@ import { MainActions } from '../common/api/main-actions';
 import { Game } from '../common/model/game';
 import { Room } from '../common/model/room';
 import { Gateway } from '../common/types/gateway';
+import { WsExceptionFilter } from '../filters/ws-exception.filter';
 import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(WsExceptionFilter)
 @WebSocketGateway()
 export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Gateway<MainActions> {
   @WebSocketServer() private server!: Server;
