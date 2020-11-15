@@ -16,6 +16,7 @@ import { SocketUtils } from '../utils/socket-utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseFilters(WsExceptionFilter)
+@UsePipes(new ValidationPipe({ transform: true }))
 @WebSocketGateway()
 export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Gateway<MainActions> {
   @WebSocketServer() private server!: Server;
