@@ -1,5 +1,5 @@
-import { Player } from '../model/player';
-import { Token } from '../model/token';
+import { Player } from '../../model/player';
+import { Token } from '../../model/token';
 
 /**
  * Player's hand available actions

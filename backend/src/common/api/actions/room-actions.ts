@@ -1,8 +1,8 @@
-import { Game } from '../model/game';
-import { Player } from '../model/player';
-import { Room } from '../model/room';
-import { Token } from '../model/token';
-import { ModelUpdate } from '../types/model-update';
+import { Game } from '../../model/game';
+import { Player } from '../../model/player';
+import { Room } from '../../model/room';
+import { Token } from '../../model/token';
+import { ModelUpdate } from '../../types/model-update';
 
 /**
  * Available actions to perform into the Room

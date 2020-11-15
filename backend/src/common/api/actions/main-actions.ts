@@ -1,5 +1,5 @@
-import { Game } from '../model/game';
-import { Room } from '../model/room';
+import { Game } from '../../model/game';
+import { Room } from '../../model/room';
 
 /**
  * Available actions to perform outside the room

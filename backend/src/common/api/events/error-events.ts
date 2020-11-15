@@ -1,4 +1,4 @@
-import { ErrorResponse } from '../model/error-response';
+import { ErrorResponse } from '../../model/error-response';
 
 /**
  * Available error-related events

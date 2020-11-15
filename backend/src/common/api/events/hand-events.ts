@@ -1,4 +1,4 @@
-import { Token } from '../model/token';
+import { Token } from '../../model/token';
 
 /**
  * Player's hand available events

@@ -1,4 +1,4 @@
-import { Player } from '../model/player';
+import { Player } from '../../model/player';
 
 /**
  * Available events outside the room

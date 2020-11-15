@@ -1,7 +1,7 @@
-import { Game } from '../model/game';
-import { Player } from '../model/player';
-import { Token } from '../model/token';
-import { ModelUpdate } from '../types/model-update';
+import { Game } from '../../model/game';
+import { Player } from '../../model/player';
+import { Token } from '../../model/token';
+import { ModelUpdate } from '../../types/model-update';
 
 /**
  * Available events to listen into the Room

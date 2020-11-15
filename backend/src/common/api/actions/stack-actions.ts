@@ -1,5 +1,5 @@
-import { Stack } from '../model/stack';
-import { Token } from '../model/token';
+import { Stack } from '../../model/stack';
+import { Token } from '../../model/token';
 
 type PullResponse = { token: Token; stack: Stack };
 type DivideResponse = { modified: Stack; created: Stack };

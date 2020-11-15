@@ -1,8 +1,8 @@
-import { ErrorEvents } from './error-events';
-import { HandEvents } from './hand-events';
-import { MainEvents } from './main-events';
-import { RoomEvents } from './room-events';
-import { StackEvents } from './stack-events';
+import { ErrorEvents } from './events/error-events';
+import { HandEvents } from './events/hand-events';
+import { MainEvents } from './events/main-events';
+import { RoomEvents } from './events/room-events';
+import { StackEvents } from './events/stack-events';
 
 /**
  * Represents all Events available.
