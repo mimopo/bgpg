@@ -38,10 +38,10 @@ describe('SocketService', () => {
   });
 
   it('on: calls "on" on subscribe, "off" on unsubscribe', () => {
-    const s = service.on('foo').subscribe();
-    expect(socket.on).toHaveBeenCalledWith('foo', jasmine.any(Function));
+    const s = service.on('hello').subscribe();
+    expect(socket.on).toHaveBeenCalledWith('hello', jasmine.any(Function));
     s.unsubscribe();
-    expect(socket.off).toHaveBeenCalledWith('foo', jasmine.any(Function));
+    expect(socket.off).toHaveBeenCalledWith('hello', jasmine.any(Function));
   });
 
   it('emit: emit event on call', () => {
