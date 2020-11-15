@@ -3,7 +3,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketSe
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
 
-import { MainActions } from '../common/api/main-actions';
+import { MainActions } from '../common/api/actions/main-actions';
 import { Game } from '../common/model/game';
 import { Player } from '../common/model/player';
 import { Room } from '../common/model/room';
