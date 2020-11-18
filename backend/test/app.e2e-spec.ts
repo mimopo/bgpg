@@ -72,14 +72,14 @@ describe('MainGateway (e2e)', () => {
   });
 
   it('creates a room', done => {
-    client1.emit('createRoom', null, (room: Room) => {
+    client1.emit('createRoom', (room: Room) => {
       expect(room).toEqual<Room>({ id: expect.any(String), name: expect.any(String) });
       done();
     });
   });
 
   it('joins into a room', done => {
-    client1.emit('createRoom', null, (created: Room) => {
+    client1.emit('createRoom', (created: Room) => {
       client2.emit('joinRoom', created.id, (room: Room) => {
         expect(room).toEqual(created);
         done();
@@ -88,7 +88,7 @@ describe('MainGateway (e2e)', () => {
   });
 
   it('another player joins the room', done => {
-    client1.emit('createRoom', null, (created: Room) => {
+    client1.emit('createRoom', (created: Room) => {
       client1.on('playerJoined', (player: Player) => {
         expect(player).toEqual<Player>({
           id: expect.any(String),
@@ -101,7 +101,7 @@ describe('MainGateway (e2e)', () => {
   });
 
   it('another player leaves the room', done => {
-    client1.emit('createRoom', null, (created: Room) => {
+    client1.emit('createRoom', (created: Room) => {
       client1.on('playerJoined', (player: Player) => {
         const id = player.id;
         client1.on('playerLeft', (playerId: string) => {
@@ -116,7 +116,7 @@ describe('MainGateway (e2e)', () => {
   });
 
   it('another player leaves the room when disconnected', done => {
-    client1.emit('createRoom', null, (created: Room) => {
+    client1.emit('createRoom', (created: Room) => {
       client1.on('playerJoined', (player: Player) => {
         const id = player.id;
         client1.on('playerLeft', (playerId: string) => {
