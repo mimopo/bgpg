@@ -1,8 +1,9 @@
-import { BadRequestException } from '@nestjs/common';
-import { WsExceptionFilter } from './ws-exception.filter';
-import { ErrorEnum } from '../common/model/error-enum';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+
+import { WsExceptionFilter } from './ws-exception.filter';
+import { ErrorEnum } from '../common/model/error-enum';
 
 class ArgumentsHostMock {
   constructor(private ack?: (response: any) => void, private socketEmit?: (e: string, d: any) => void | null) {}
@@ -23,6 +24,7 @@ class ArgumentsHostMock {
 describe('WsExceptionFilter', () => {
   let filter: WsExceptionFilter<any>;
   beforeEach(() => {
+    Logger.overrideLogger(['error']);
     filter = new WsExceptionFilter();
   });
 

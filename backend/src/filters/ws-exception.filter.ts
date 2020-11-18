@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, BadRequestException } from '@nestjs/common';
+import { ArgumentsHost, Catch, BadRequestException, Logger } from '@nestjs/common';
 import { BaseWsExceptionFilter, WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -11,6 +11,8 @@ import { ErrorResponse } from '../common/model/error-response';
  */
 @Catch()
 export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
+  private readonly logger = new Logger('WsExceptionFilter');
+
   /**
    * Catch the exception and send error to de client
    */
@@ -26,6 +28,12 @@ export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
       let message = 'Internal Server Error';
       if (exception instanceof WsException || exception instanceof EntityNotFoundError) {
         message = exception.message;
+      } else {
+        if (exception instanceof Error) {
+          this.logger.error(exception.message, exception.stack);
+        } else {
+          this.logger.error(exception);
+        }
       }
       error = {
         error: ErrorEnum.unexpected,
