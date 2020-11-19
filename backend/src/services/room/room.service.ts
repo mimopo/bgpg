@@ -14,6 +14,6 @@ export class RoomService {
   }
 
   find(id: string): Promise<Room> {
-    return this.repository.findOneOrFail(id);
+    return this.repository.findOneOrFail({ id });
   }
 }
