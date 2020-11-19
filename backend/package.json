@@ -85,7 +85,8 @@
       }
     },
     "coveragePathIgnorePatterns": [
-      "<rootDir>/entities"
+      "<rootDir>/entities",
+      "<rootDir/mocks"
     ]
   }
 }

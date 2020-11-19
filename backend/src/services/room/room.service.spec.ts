@@ -3,27 +3,12 @@ import { getRepositoryToken } from '@nestjs/typeorm/dist/common/typeorm.utils';
 import { Repository } from 'typeorm';
 
 import { Room } from '../../entities/room.entity';
+import { RepositoryMock } from '../../mocks/repository-mock';
 import { RoomService } from './room.service';
 
-class RoomRepositoryMock implements Partial<Repository<any>> {
-  async save(room: any) {
-    if (!room.id) {
-      room.id = 'id';
-    }
-    return room;
-  }
-  async findOneOrFail(roomId: any) {
-    if (roomId === 'fail') {
-      throw new Error();
-    }
-    const room = new Room();
-    room.id = roomId;
-    return room;
-  }
-}
-
-describe('RoomService', () => {
+describe('findOneOrFailRoomService', () => {
   let service: RoomService;
+  let repository: Repository<Room>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,12 +16,14 @@ describe('RoomService', () => {
         RoomService,
         {
           provide: getRepositoryToken(Room),
-          useClass: RoomRepositoryMock,
+          useClass: RepositoryMock,
         },
       ],
     }).compile();
 
-    service = module.get<RoomService>(RoomService);
+    service = module.get(RoomService);
+    repository = module.get(getRepositoryToken(Room));
+    jest.clearAllMocks();
   });
 
   it('to be defined', () => {
@@ -48,15 +35,12 @@ describe('RoomService', () => {
   });
 
   it('find: returns a Room', () => {
+    jest.spyOn(repository, 'findOneOrFail').mockResolvedValue(new Room());
     return expect(service.find('success')).resolves.toBeInstanceOf(Room);
   });
 
-  it('find: returns a Room with the same id', () => {
-    const id = 'success';
-    return expect(service.find(id)).resolves.toHaveProperty('id', id);
-  });
-
   it('find: throws exceptions when roomId not found', () => {
+    jest.spyOn(repository, 'findOneOrFail').mockRejectedValue(new Error());
     return expect(service.find('fail')).rejects.toBeDefined();
   });
 });

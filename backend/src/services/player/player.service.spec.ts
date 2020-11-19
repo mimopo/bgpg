@@ -3,31 +3,12 @@ import { getRepositoryToken } from '@nestjs/typeorm/dist';
 import { Repository } from 'typeorm';
 
 import { Player } from '../../entities/player.entity';
+import { RepositoryMock } from '../../mocks/repository-mock';
 import { PlayerService } from './player.service';
-
-class PlayerRepositoryMock implements Partial<Repository<any>> {
-  async save(player: any) {
-    if (!player.id) {
-      player.id = 'id';
-    }
-    return player;
-  }
-  async findOneOrFail(search: any) {
-    const id = search.id;
-    if (id === 'fail') {
-      throw new Error();
-    }
-    const player = new Player();
-    player.id = id;
-    return player;
-  }
-  async delete(): Promise<any> {
-    return;
-  }
-}
 
 describe('PlayerService', () => {
   let service: PlayerService;
+  let repository: Repository<Player>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,12 +16,15 @@ describe('PlayerService', () => {
         PlayerService,
         {
           provide: getRepositoryToken(Player),
-          useClass: PlayerRepositoryMock,
+          useClass: RepositoryMock,
         },
       ],
     }).compile();
 
-    service = module.get<PlayerService>(PlayerService);
+    service = module.get(PlayerService);
+    repository = module.get(getRepositoryToken(Player));
+    jest.spyOn(repository, 'findOneOrFail').mockResolvedValue(new Player());
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -52,40 +36,36 @@ describe('PlayerService', () => {
   });
 
   it('update: returns a Player', () => {
-    return expect(service.update({ id: 'success', name: 'foo' })).resolves.toBeInstanceOf(Player);
+    return expect(service.update({ id: 'id', name: 'foo' })).resolves.toBeInstanceOf(Player);
   });
 
   it('find: returns a Player', () => {
-    return expect(service.find('success')).resolves.toBeInstanceOf(Player);
-  });
-
-  it('find: returns a Player with the same id', () => {
-    const id = 'success';
-    return expect(service.find(id)).resolves.toHaveProperty('id', id);
+    return expect(service.find('id')).resolves.toBeInstanceOf(Player);
   });
 
   it('find: throws exceptions when playerId not found', () => {
-    return expect(service.find('fail')).rejects.toBeDefined();
+    jest.spyOn(repository, 'findOneOrFail').mockRejectedValue(new Error());
+    return expect(service.find('id')).rejects.toBeDefined();
   });
 
   it('joinRoom: assing a roomId to the Player', () => {
-    const player = new Player();
     const roomId = 'roomId';
-    return expect(service.joinRoom(player, roomId)).resolves.toHaveProperty('roomId', roomId);
+    return expect(service.joinRoom(new Player(), roomId)).resolves.toHaveProperty('roomId', roomId);
   });
 
   it('leaveRoom: removes the roomId from the Player', () => {
     const player = new Player();
     player.roomId = 'roomId';
+    jest.spyOn(repository, 'findOneOrFail').mockResolvedValue(player);
     return expect(service.leaveRoom(player)).resolves.toHaveProperty('roomId', undefined);
+  });
+
+  it('remove: resolves the promise', () => {
+    return expect(service.remove('id')).resolves.toBeUndefined();
   });
 
   it('leaveRoom: throws an error when the user isnt in a room', () => {
     const player = new Player();
     return expect(service.leaveRoom(player)).rejects.toBeDefined();
-  });
-
-  it('remove: resolves the promise', () => {
-    return expect(service.remove('id')).resolves.toBeUndefined();
   });
 });
