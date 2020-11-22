@@ -19,6 +19,7 @@ import { environment } from '../../environments/environment';
 export class SocketService {
   private socket: SocketIOClient.Socket;
 
+  /** Returns the connection status */
   get connected(): boolean {
     return this.socket.connected;
   }
@@ -28,6 +29,11 @@ export class SocketService {
     this.socket = io.connect(environment.server, options);
   }
 
+  /**
+   * Listen to an event
+   * @param event Event name
+   * @link Events
+   */
   on<K extends keyof Events, R = Parameters<Events[K]>[0]>(event: K): Observable<R> {
     return new Observable((observer) => {
       const callback = (data: R) => observer.next(data);
@@ -36,14 +42,25 @@ export class SocketService {
     });
   }
 
-  emit<K extends keyof Actions>(event: K, ...data: Parameters<Actions[K]>): void {
-    this.socket.emit(`${event}`, ...data);
+  /**
+   * Sends an action to the server
+   * @param action Action name
+   * @param data Action arguments
+   * @link Actions
+   */
+  emit<K extends keyof Actions>(action: K, ...data: Parameters<Actions[K]>): void {
+    this.socket.emit(`${action}`, ...data);
   }
 
-  // El tipo de la acción es una promesa pero quiero que devuelva el valor
-  request<K extends keyof Actions, R = ReturnType<Actions[K]>>(event: K, ...data: Parameters<Actions[K]>): Observable<R> {
+  /**
+   * Sends an action to the server and waits for response.
+   * @param action Action name
+   * @param data Action arguments
+   * @link Actions
+   */
+  request<K extends keyof Actions, R = ReturnType<Actions[K]>>(action: K, ...data: Parameters<Actions[K]>): Observable<R> {
     const o = new Observable<R>((observer) => {
-      this.socket.emit(`${event}`, ...data, (response: R | ErrorResponse) => {
+      this.socket.emit(`${action}`, ...data, (response: R | ErrorResponse) => {
         if ((response as ErrorResponse).error) {
           observer.error(response);
         } else {

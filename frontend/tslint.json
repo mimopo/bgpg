@@ -35,7 +35,7 @@
     "no-var-requires": false,
     "object-literal-key-quotes": [true, "as-needed"],
     "ordered-imports": true,
-    "quotemark": [true, "single"],
+    "quotemark": [true, "single", "avoid-escape"],
     "semicolon": {
       "options": ["always"]
     },

@@ -1,0 +1,17 @@
+<div>
+  <h2>Join:</h2>
+  <form #form="ngForm" (ngSubmit)="join(roomId)">
+    <label for="roomId">Room id:</label>
+    <input type="text" id="roomId" [(ngModel)]="roomId" [disabled]="submitting" name="roomId" required minlength="6" />
+    <button type="submit" [disabled]="form.invalid || submitting">join</button>
+  </form>
+</div>
+
+<div>
+  <h2>Create:</h2>
+  <button (click)="create()" [disabled]="submitting">Create</button>
+</div>
+
+<p>
+  {{ error }}
+</p>
