@@ -1,4 +1,4 @@
-import { fakeAsync, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import * as io from 'socket.io-client';
 
 import { ErrorResponse } from 'bgpg/model/error-response';

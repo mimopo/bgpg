@@ -15,25 +15,27 @@ export class HomeComponent {
 
   constructor(private roomService: RoomService, private router: Router) {}
 
-  create(): void {
+  create(): Promise<boolean> {
     this.submitting = true;
     this.error = '';
-    this.roomService
+    return this.roomService
       .create()
       .toPromise()
       .then((room) => this.router.navigate(['game', room.id]))
       .catch(() => {
         this.error = "Can't create a room";
         this.submitting = false;
+        return false;
       });
   }
 
-  join(id: string): void {
+  join(id: string): Promise<boolean> {
     this.submitting = true;
     this.error = '';
-    this.router.navigate(['game', id]).catch(() => {
+    return this.router.navigate(['game', id]).catch(() => {
       this.error = `Can't connect to the room ${id}`;
       this.submitting = false;
+      return false;
     });
   }
 }
