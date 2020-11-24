@@ -1,17 +1,17 @@
 <div>
   <h2>Join:</h2>
-  <form #form="ngForm" (ngSubmit)="join(roomId)">
-    <label for="roomId">Room id:</label>
-    <input type="text" id="roomId" [(ngModel)]="roomId" [disabled]="submitting" name="roomId" required minlength="6" />
-    <button type="submit" [disabled]="form.invalid || submitting">join</button>
+  <form #form="ngForm" (ngSubmit)="join(roomId)" id="join-form">
+    <label for="join-form-id">Room id:</label>
+    <input type="text" id="join-form-id" [(ngModel)]="roomId" [disabled]="submitting" name="roomId" required minlength="6" />
+    <button id="join-button" type="submit" [disabled]="form.invalid || submitting">join</button>
   </form>
 </div>
 
 <div>
   <h2>Create:</h2>
-  <button (click)="create()" [disabled]="submitting">Create</button>
+  <button (click)="create()" [disabled]="submitting" id="create-button">Create</button>
 </div>
 
-<p class="error">
+<p *ngIf="error" id="error-dialog" class="error">
   {{ error }}
 </p>

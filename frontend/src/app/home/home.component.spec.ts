@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -34,11 +34,15 @@ describe('HomeComponent', () => {
     router.navigate.calls.reset();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HomeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  beforeEach(
+    waitForAsync(() => {
+      fixture = TestBed.createComponent(HomeComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    }),
+  );
+
+  // CLASS TESTS
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -56,7 +60,7 @@ describe('HomeComponent', () => {
     expect(component.error).toBeTruthy();
   });
 
-  it('create: should lock the form while waiting', fakeAsync(() => {
+  it('create: should lock forms while submitting', fakeAsync(() => {
     roomService.create.and.returnValue(throwError(new Error()).pipe(delay(50)));
     expect(component.submitting).toBeFalsy();
     component.create();
@@ -77,7 +81,7 @@ describe('HomeComponent', () => {
     expect(component.error).toBeTruthy();
   });
 
-  it('join: should lock the form while waiting', fakeAsync(() => {
+  it('join: should lock forms while submitting', fakeAsync(() => {
     router.navigate.and.rejectWith(false);
     expect(component.submitting).toBeFalsy();
     component.join('foo');
@@ -85,4 +89,55 @@ describe('HomeComponent', () => {
     tick(100);
     expect(component.submitting).toBeFalsy();
   }));
+
+  // UI TESTS
+
+  it('create-button: should be disabled while submitting', () => {
+    const e: HTMLElement = fixture.debugElement.nativeElement;
+    const button = e.querySelector<HTMLButtonElement>('#create-button');
+    expect(button?.disabled).toBeFalse();
+    component.submitting = true;
+    fixture.detectChanges();
+    expect(button?.disabled).toBeTrue();
+  });
+
+  it('create-button: should call create', () => {
+    spyOn(component, 'create').and.resolveTo(true);
+    const e: HTMLElement = fixture.debugElement.nativeElement;
+    const button = e.querySelector<HTMLButtonElement>('#create-button');
+    button?.click();
+    expect(component.create).toHaveBeenCalled();
+  });
+
+  it('join-button: should be locked while submitting', () => {
+    const e: HTMLElement = fixture.debugElement.nativeElement;
+    const button = e.querySelector<HTMLButtonElement>('#join-button');
+    expect(button?.disabled).toBeFalse();
+    component.submitting = true;
+    fixture.detectChanges();
+    expect(button?.disabled).toBeTrue();
+  });
+
+  it('join-form: should call join', () => {
+    spyOn(component, 'join').and.resolveTo(true);
+    const e: HTMLElement = fixture.debugElement.nativeElement;
+    const button = e.querySelector<HTMLButtonElement>('#join-button');
+    const input = e.querySelector<HTMLInputElement>('#join-form-id');
+    if (input) {
+      input.value = 'foo-bar';
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    }
+    button?.click();
+    expect(component.join).toHaveBeenCalledWith('foo-bar');
+  });
+
+  it('error: should print error message', () => {
+    const e: HTMLElement = fixture.debugElement.nativeElement;
+    const selector = '#error-dialog';
+    expect(e.querySelector(selector)).toBeFalsy();
+    component.error = 'Error';
+    fixture.detectChanges();
+    expect(e.querySelector(selector)?.textContent).toContain('Error');
+  });
 });
