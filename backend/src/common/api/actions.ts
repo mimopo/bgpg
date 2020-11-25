@@ -1,3 +1,4 @@
+import { GameActions } from './actions/game-actions';
 import { HandActions } from './actions/hand-actions';
 import { MainActions } from './actions/main-actions';
 import { RoomActions } from './actions/room-actions';
@@ -11,4 +12,4 @@ import { StackActions } from './actions/stack-actions';
  * (...any[]) => any
  * ```
  */
-export interface Actions extends HandActions, MainActions, RoomActions, StackActions {}
+export interface Actions extends HandActions, MainActions, RoomActions, StackActions, GameActions {}

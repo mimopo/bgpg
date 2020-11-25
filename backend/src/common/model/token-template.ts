@@ -23,7 +23,8 @@ export interface TokenTemplate {
   description?: string;
 
   /**
-   * Token faces
+   * Token faces.
+   * These IDs must exists on the the shapes.svg file.
    *
    * @items.minLength 1
    */

@@ -39,7 +39,7 @@ export interface Game {
   tokens: { [id: string]: TokenTemplate };
 
   /**
-   * URL to the faces file
+   * URL to the shapes.svg
    *
    * @format uri
    */
@@ -80,7 +80,7 @@ export interface Game {
    * Game's parts licenses.
    * Example: Board image: John Doe, CC BY-SA 3.0, https://wiki.creativecommons.org
    */
-  licenses?: string;
+  licenses?: string[];
 
   /**
    * Game's website

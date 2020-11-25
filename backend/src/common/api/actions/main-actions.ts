@@ -1,10 +1,17 @@
 import { Game } from '../../model/game';
+import { Player } from '../../model/player';
 import { Room } from '../../model/room';
+import { ModelUpdate } from '../../types/model-update';
 
 /**
  * Available actions to perform outside the room
  */
 export interface MainActions {
+  /**
+   * Updates the player's data
+   */
+  updatePlayer(player: ModelUpdate<Player>): void;
+
   /**
    * Create an empty room
    */

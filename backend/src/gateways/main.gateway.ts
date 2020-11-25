@@ -14,6 +14,9 @@ import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
 
+/**
+ * This Gateway handles the actions that can be performed outside of a room
+ */
 @UseInterceptors(ClassSerializerInterceptor)
 @UseFilters(WsExceptionFilter)
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -39,6 +42,14 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
       }
       await this.playerService.remove(player.id);
     } catch (e) {}
+  }
+
+  @SubscribeMessage('updatePlayer')
+  async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<void> {
+    const player = await this.playerService.update(update);
+    if (player.roomId) {
+      SocketUtils.emit(client.in(player.roomId), 'playerUpdated', update);
+    }
   }
 
   @SubscribeMessage('createRoom')
@@ -72,12 +83,5 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
 
   async getGames(client: Socket, search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {
     throw new Error('Method not implemented. Search: ' + search);
-  }
-
-  async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<void> {
-    const player = await this.playerService.update(update);
-    if (player.roomId) {
-      SocketUtils.emit(client.in(player.roomId), 'playerUpdated', update);
-    }
   }
 }

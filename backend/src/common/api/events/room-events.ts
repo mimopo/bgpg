@@ -1,6 +1,5 @@
 import { Game } from '../../model/game';
 import { Player } from '../../model/player';
-import { Token } from '../../model/token';
 import { ModelUpdate } from '../../types/model-update';
 
 /**
@@ -30,12 +29,6 @@ export interface RoomEvents {
    * @param game
    */
   gameChanged(game: Game): void;
-
-  /**
-   * Token updated by another player (moved, flipped, rolled, rotation, etc.)
-   * @param token A partial Token object with the updated properties
-   */
-  tokenUpdated(token: ModelUpdate<Token>): void;
 
   /**
    * Log message
