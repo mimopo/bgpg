@@ -1,7 +1,7 @@
-import { ArgumentsHost, Catch, BadRequestException, Logger } from '@nestjs/common';
+import { ArgumentsHost, BadRequestException, Catch, Logger } from '@nestjs/common';
 import { BaseWsExceptionFilter, WsException } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { Socket } from 'socket.io';
 
 import { ErrorEnum } from '../common/model/error-enum';
 import { ErrorResponse } from '../common/model/error-response';

@@ -1,18 +1,18 @@
 import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
+import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 
-import { MainActions } from '../common/api/actions/main-actions';
 import { Game } from '../common/model/game';
-import { Player } from '../common/model/player';
-import { Room } from '../common/model/room';
 import { Gateway } from '../common/types/gateway';
+import { MainActions } from '../common/api/actions/main-actions';
 import { ModelUpdate } from '../common/types/model-update';
-import { WsExceptionFilter } from '../filters/ws-exception.filter';
+import { Player } from '../common/model/player';
 import { PlayerService } from '../services/player/player.service';
+import { Room } from '../common/model/room';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
+import { WsExceptionFilter } from '../filters/ws-exception.filter';
 
 /**
  * This Gateway handles the actions that can be performed outside of a room

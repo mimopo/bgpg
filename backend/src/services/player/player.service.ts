@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm/repository/Repository';
-import { ModelUpdate } from '../../common/types/model-update';
 
+import { ModelUpdate } from '../../common/types/model-update';
 import { Player } from '../../entities/player.entity';
 
 @Injectable()

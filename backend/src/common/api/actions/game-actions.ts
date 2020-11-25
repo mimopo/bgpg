@@ -1,5 +1,5 @@
-import { Token } from '../../model/token';
 import { ModelUpdate } from '../../types/model-update';
+import { Token } from '../../model/token';
 
 /**
  * Available Game related actions
