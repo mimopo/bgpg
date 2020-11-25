@@ -16,10 +16,10 @@ export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
   /**
    * Catch the exception and send error to de client
    */
-  catch(exception: T, host: ArgumentsHost) {
+  catch(exception: T, host: ArgumentsHost): void {
     let error: ErrorResponse;
     if (exception instanceof BadRequestException) {
-      const response: any = exception.getResponse();
+      const response = exception.getResponse() as { message: string[] };
       error = {
         error: ErrorEnum.validation,
         message: response.message.map((m: string) => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') + '.',

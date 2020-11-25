@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { BadRequestException, Logger } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { WsException } from '@nestjs/websockets';

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as classTransformer from 'class-transformer';
 import { Player } from '../entities/player.entity';
 

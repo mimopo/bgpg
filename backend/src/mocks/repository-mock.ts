@@ -3,7 +3,7 @@ import { DeleteResult } from 'typeorm';
 /**
  * Mock implementation for typeorm repository
  */
-export class RepositoryMock<T = any> {
+export class RepositoryMock<T> {
   async save(entity: T): Promise<T> {
     return entity;
   }

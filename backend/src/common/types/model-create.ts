@@ -1,4 +1,4 @@
 /**
  * Exclude "id" property
  */
-export type ModelCreate<T extends { id: any }> = Omit<T, 'id'>;
+export type ModelCreate<T extends { id: string }> = Omit<T, 'id'>;

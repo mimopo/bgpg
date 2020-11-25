@@ -27,7 +27,7 @@ export class SocketUtils {
 
   static async leave(client: Socket, roomId: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      client.leave(roomId, (e: any) => {
+      client.leave(roomId, (e: unknown) => {
         e ? reject(e) : resolve();
       });
     });

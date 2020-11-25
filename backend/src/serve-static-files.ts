@@ -12,7 +12,7 @@ import { static as st } from 'express';
  * @param route Route to register
  * @param path Path to serve
  */
-export function serveStaticFiles(app: INestApplication, route: string, path: string) {
+export function serveStaticFiles(app: INestApplication, route: string, path: string): void {
   // Check if file exists
   if (!existsSync(path)) {
     throw new Error(`Given path not exists: ${path}`);

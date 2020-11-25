@@ -27,13 +27,13 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
 
   constructor(private roomService: RoomService, private playerService: PlayerService) {}
 
-  async handleConnection(client: Socket) {
+  async handleConnection(client: Socket): Promise<void> {
     this.logger.verbose(`Client connected    - ${client.id}`);
     const player = await this.playerService.create(client.id);
     SocketUtils.emit(this.server, 'hello', player);
   }
 
-  async handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket): Promise<void> {
     this.logger.verbose(`Client disconnected - ${client.id}`);
     try {
       const player = await this.playerService.find(client.id);
