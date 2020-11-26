@@ -12,15 +12,18 @@ export class SocketUtils {
     const message = data !== null && typeof data === 'object' ? classToPlain(data) : data;
     if (ack) {
       return !!socket.emit(`${event}`, message, ack);
-    } else {
-      return !!socket.emit(`${event}`, message);
     }
+    return !!socket.emit(`${event}`, message);
   }
 
   static async join(client: Socket, roomId: string): Promise<void> {
     return new Promise((resolve, reject) => {
       client.join(roomId, e => {
-        e ? reject(e) : resolve();
+        if (e) {
+          reject(e);
+        } else {
+          resolve();
+        }
       });
     });
   }
@@ -28,7 +31,11 @@ export class SocketUtils {
   static async leave(client: Socket, roomId: string): Promise<void> {
     return new Promise((resolve, reject) => {
       client.leave(roomId, (e: unknown) => {
-        e ? reject(e) : resolve();
+        if (e) {
+          reject(e);
+        } else {
+          resolve();
+        }
       });
     });
   }

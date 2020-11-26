@@ -18,6 +18,16 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
+    'no-else-return': ['warn'],
+    'no-extra-parens': ['warn'],
+    'no-shadow': ['warn'],
+    'no-throw-literal': ['warn'],
+    'no-unused-expressions': ['warn'],
+    'no-use-before-define': ['warn'],
     'sort-imports': ['warn', { allowSeparatedGroups: true }],
+    camelcase: ['warn'],
+    complexity: ['warn', 10],
+    eqeqeq: ['warn'],
+    yoda: ['warn'],
   },
 };
