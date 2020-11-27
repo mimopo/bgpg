@@ -1,5 +1,7 @@
-name: test
-on: [push]
+name: test-backend
+on:
+  push:
+    paths: [backend/**]
 jobs:
   test-backend:
     runs-on: ubuntu-latest
@@ -25,16 +27,3 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run test-e2e
-  test-frontend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-      - run: npm ci
-        working-directory: .
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
