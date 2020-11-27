@@ -6,6 +6,7 @@ import { ErrorResponse } from '../../model/error-response';
 export interface ErrorEvents {
   /**
    * Exception emitted when no ack provided
+   *
    * @see WsExceptionFilter
    */
   exception(error: ErrorResponse): void;

@@ -5,6 +5,7 @@ import { TokenTemplate } from './token-template';
  * Game box containing all the tokens that you need to play
  *
  * This interface is converted to json-schema using typescript-json-schema
+ *
  * @see https://github.com/YousefED/typescript-json-schema#readme
  */
 export interface Game {

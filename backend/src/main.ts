@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { serveStaticFiles } from './serve-static-files';
 
 // Nest bootstrap
-async function bootstrap() {
+const bootstrap = async () => {
   // Create Nest App
   const app = await NestFactory.create(AppModule);
   // Serve static files
@@ -20,5 +20,5 @@ async function bootstrap() {
   app.enableShutdownHooks();
   // Listen
   await app.listen(process.env.BGPG_PORT || 3000);
-}
+};
 bootstrap();

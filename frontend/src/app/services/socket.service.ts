@@ -64,7 +64,7 @@ export class SocketService {
   request<K extends keyof Actions, R = ReturnType<Actions[K]>>(action: K, ...data: Parameters<Actions[K]>): Observable<R> {
     const o = new Observable<R>((observer) => {
       this.socket.emit(`${action}`, ...data, (response: R | ErrorResponse) => {
-        if (response as ErrorResponse.error) {
+        if ((response as ErrorResponse).error) {
           observer.error(response);
         } else {
           observer.next(response as R);

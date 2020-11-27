@@ -10,12 +10,14 @@ type DivideResponse = { modified: Stack; created: Stack };
 export interface StackActions {
   /**
    * Randomize tokens
+   *
    * @param stackId
    */
   stackShuffle(stackId: Stack['id']): Stack;
 
   /**
    * Move all tokens from one stack to another, then delete the source stack
+   *
    * @param destinationId Destination stack id
    * @param sourceId Source stack id
    */
@@ -23,6 +25,7 @@ export interface StackActions {
 
   /**
    * Create a new stack getting elements from existing stack
+   *
    * @param stackId
    * @param length The number of tokens to get, positive to get them from top or negative to get them from bottom
    */
@@ -30,6 +33,7 @@ export interface StackActions {
 
   /**
    * Flip and set all tokens face up or face down
+   *
    * @param stackId
    * @param faceUp If true set all the tokens face up, face down otherwise
    */
@@ -37,6 +41,7 @@ export interface StackActions {
 
   /**
    * Add token to stack
+   *
    * @param stackId
    * @param tokenId
    * @param toTop If true the token will be added on top, on the bottom otherwise
@@ -46,6 +51,7 @@ export interface StackActions {
 
   /**
    * Get token from stack
+   *
    * @param stackId
    * @param fromTop If true the token will be added on top, on the bottom otherwise
    * @param index Index where the token will be added, 0 by default

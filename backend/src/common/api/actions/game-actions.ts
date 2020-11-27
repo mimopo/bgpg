@@ -7,6 +7,7 @@ import { Token } from '../../model/token';
 export interface GameActions {
   /**
    * Roll a token, it will get a random face.
+   *
    * @param tokenId
    * @returns Token properties changed
    */
@@ -14,12 +15,14 @@ export interface GameActions {
 
   /**
    * Flip a token, it will change the face to it's next face.
+   *
    * @param tokenId
    */
   flip(tokenId: Token['id']): ModelUpdate<Token>;
 
   /**
    * Move token
+   *
    * @param tokenId
    * @param x Horizontal position
    * @param y Vertical position
@@ -28,6 +31,7 @@ export interface GameActions {
 
   /**
    * Rotate token
+   *
    * @param tokenId
    * @param degrees Rotation status in degrees, from 0 to 359
    */

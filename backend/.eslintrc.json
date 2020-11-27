@@ -4,12 +4,10 @@
     "project": "tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint/eslint-plugin", "import"],
-  "extends": ["../eslint-common-config", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": ["../eslint-common-config"],
   "root": true,
   "env": {
     "node": true,
     "jest": true
-  },
-  "rules": {}
+  }
 }

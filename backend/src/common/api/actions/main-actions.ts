@@ -19,12 +19,14 @@ export interface MainActions {
 
   /**
    * Join into a room
+   *
    * @param roomId
    */
   joinRoom(roomId: Room['id']): Room;
 
   /**
    * List available games
+   *
    * @param search Optional query string to filter the list
    */
   getGames(search?: string): Pick<Game, 'id' | 'title' | 'url'>[];

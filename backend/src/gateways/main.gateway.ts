@@ -27,23 +27,6 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
 
   constructor(private roomService: RoomService, private playerService: PlayerService) {}
 
-  async handleConnection(client: Socket): Promise<void> {
-    this.logger.verbose(`Client connected    - ${client.id}`);
-    const player = await this.playerService.create(client.id);
-    SocketUtils.emit(this.server, 'hello', player);
-  }
-
-  async handleDisconnect(client: Socket): Promise<void> {
-    this.logger.verbose(`Client disconnected - ${client.id}`);
-    try {
-      const player = await this.playerService.find(client.id);
-      if (player.roomId) {
-        SocketUtils.emit(client.in(player.roomId), 'playerLeft', player.id);
-      }
-      await this.playerService.remove(player.id);
-    } catch (e) {}
-  }
-
   @SubscribeMessage('updatePlayer')
   async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<void> {
     const player = await this.playerService.update(update);
@@ -79,6 +62,23 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
     await this.playerService.leaveRoom(player);
     SocketUtils.emit(client.in(roomId), 'playerLeft', player.id);
     return SocketUtils.leave(client, roomId);
+  }
+
+  async handleConnection(client: Socket): Promise<void> {
+    this.logger.verbose(`Client connected    - ${client.id}`);
+    const player = await this.playerService.create(client.id);
+    SocketUtils.emit(this.server, 'hello', player);
+  }
+
+  async handleDisconnect(client: Socket): Promise<void> {
+    this.logger.verbose(`Client disconnected - ${client.id}`);
+    try {
+      const player = await this.playerService.find(client.id);
+      if (player.roomId) {
+        SocketUtils.emit(client.in(player.roomId), 'playerLeft', player.id);
+      }
+      await this.playerService.remove(player.id);
+    } catch (e) {}
   }
 
   async getGames(client: Socket, search?: string): Promise<Pick<Game, 'id' | 'title' | 'url'>[]> {

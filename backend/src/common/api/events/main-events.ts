@@ -6,6 +6,7 @@ import { Player } from '../../model/player';
 export interface MainEvents {
   /**
    * Sends the player his profile
+   *
    * @param player
    */
   hello(player: Player): void;

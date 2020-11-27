@@ -37,7 +37,7 @@ export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
       }
       error = {
         error: ErrorEnum.unexpected,
-        message: message,
+        message,
       };
     }
     this.ack(error, host);

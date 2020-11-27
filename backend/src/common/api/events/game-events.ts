@@ -7,6 +7,7 @@ import { Token } from '../../model/token';
 export interface GameEvents {
   /**
    * Token updated by another player (moved, flipped, rolled, rotation, etc.)
+   *
    * @param token A partial Token object with the updated properties
    */
   tokenUpdated(token: ModelUpdate<Token>): void;

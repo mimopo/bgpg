@@ -7,12 +7,14 @@ import { Token } from '../../model/token';
 export interface HandActions {
   /**
    * Get one Token from another Player's hand
+   *
    * @param playerId
    */
   pullToken(playerId: Player['id']): Token;
 
   /**
    * Add one Token to another Player's hand
+   *
    * @param playerId
    */
   pushToken(playerId: Player['id'], token: Token): void;

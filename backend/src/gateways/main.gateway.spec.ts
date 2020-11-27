@@ -18,9 +18,9 @@ describe('MainGateway', () => {
   let module: TestingModule;
   let client: any;
 
-  function mockPlayerServiceFind(mock: Partial<Player>) {
+  const mockPlayerServiceFind = (mock: Partial<Player>) => {
     jest.spyOn(module.get(PlayerService), 'find').mockResolvedValue(mock as Player);
-  }
+  };
 
   beforeAll(() => {
     Logger.overrideLogger(['error']);
@@ -50,21 +50,21 @@ describe('MainGateway', () => {
     expect(gateway).toBeDefined();
   });
 
-  it('handleConnection: creates a Player', done => {
+  it('handleConnection: creates a Player', (done) => {
     gateway.handleConnection(client).then(() => {
       expect(module.get(PlayerService).create).toBeCalledWith(client.id);
       done();
     });
   });
 
-  it('handleConnection: emits hello', done => {
+  it('handleConnection: emits hello', (done) => {
     gateway.handleConnection(client).then(() => {
       expect(SocketUtils.emit).toHaveBeenLastCalledWith(null, 'hello', expect.any(Player));
       done();
     });
   });
 
-  it('handleDisconnect: emits playerLeft if its in a room', done => {
+  it('handleDisconnect: emits playerLeft if its in a room', (done) => {
     mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as Player);
     gateway.handleDisconnect(client).then(() => {
       expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerLeft', 'playerId');
@@ -72,7 +72,7 @@ describe('MainGateway', () => {
     });
   });
 
-  it('handleDisconnect: removes the Player', done => {
+  it('handleDisconnect: removes the Player', (done) => {
     mockPlayerServiceFind({ id: 'playerId' } as Player);
     gateway.handleDisconnect(client).then(() => {
       expect(module.get(PlayerService).remove).toBeCalledWith('playerId');
@@ -80,14 +80,14 @@ describe('MainGateway', () => {
     });
   });
 
-  it('createRoom: creates a Room', done => {
+  it('createRoom: creates a Room', (done) => {
     gateway.createRoom(client).then(() => {
       expect(module.get(RoomService).create).toBeCalled();
       done();
     });
   });
 
-  it('createRoom: joins into the Socket room', done => {
+  it('createRoom: joins into the Socket room', (done) => {
     const service = module.get(RoomService);
     jest.spyOn(service, 'create').mockResolvedValue({ id: 'roomId' } as Room);
     gateway.createRoom(client).then(() => {
@@ -100,14 +100,14 @@ describe('MainGateway', () => {
     return expect(gateway.createRoom(client)).resolves.toBeInstanceOf(Room);
   });
 
-  it('joinRoom: joins to the socket room', done => {
+  it('joinRoom: joins to the socket room', (done) => {
     gateway.joinRoom(client, 'success').then(() => {
       expect(SocketUtils.join).toHaveBeenLastCalledWith(client, expect.any(String));
       done();
     });
   });
 
-  it('joinRoom: emits playerJoined with a Player', done => {
+  it('joinRoom: emits playerJoined with a Player', (done) => {
     gateway.joinRoom(client, 'success').then(() => {
       expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerJoined', expect.any(Player));
       done();
@@ -122,7 +122,7 @@ describe('MainGateway', () => {
     return expect(gateway.leaveRoom(client)).rejects.toBeDefined();
   });
 
-  it('leaveRoom: emits playerLeft with a player id', done => {
+  it('leaveRoom: emits playerLeft with a player id', (done) => {
     mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
     gateway.leaveRoom(client).then(() => {
       expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerLeft', expect.any(String));
@@ -130,7 +130,7 @@ describe('MainGateway', () => {
     });
   });
 
-  it('leaveRoom: leaves the socket room', done => {
+  it('leaveRoom: leaves the socket room', (done) => {
     mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
     gateway.leaveRoom(client).then(() => {
       expect(SocketUtils.leave).toHaveBeenLastCalledWith(client, expect.any(String));
@@ -138,7 +138,7 @@ describe('MainGateway', () => {
     });
   });
 
-  it('leaveRoom: leaves the the room', done => {
+  it('leaveRoom: leaves the the room', (done) => {
     const service = module.get(PlayerService);
     mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
     gateway.leaveRoom(client).then(() => {
@@ -157,7 +157,7 @@ describe('MainGateway', () => {
     return expect(gateway.updatePlayer(client, { id: 'foo', name: 'bar' })).resolves.toBeFalsy();
   });
 
-  it('updatePlayer: emits player updated if player is in a room', done => {
+  it('updatePlayer: emits player updated if player is in a room', (done) => {
     const service = module.get(PlayerService);
     const playerMock = { id: 'foo', roomId: 'bar' };
     jest.spyOn(service, 'update').mockResolvedValue(playerMock as any);

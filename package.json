@@ -19,14 +19,23 @@
     "start-frontend": "npm --prefix=frontend run start",
     "schema-game": "typescript-json-schema backend/src/common/model/game.ts Game --required -o schema/schema-game.json",
     "schema-shapes": "typescript-json-schema backend/src/common/model/game-shapes.ts GameShapes --required -o schema/schema-shape.json",
-    "schema-translation": "typescript-json-schema backend/src/common/model/game-translation.ts GameTranslation --required -o schema/schema-translation.json"
+    "schema-translation": "typescript-json-schema backend/src/common/model/game-translation.ts GameTranslation --required -o schema/schema-translation.json",
+    "postinstall": "link-parent-bin -c . --filter='+(frontend|backend)'"
   },
   "devDependencies": {
     "@compodoc/compodoc": "^1.1.11",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.1.2",
+    "prettier": "^2.2.0",
     "rimraf": "^3.0.2",
-    "typescript-json-schema": "^0.43.0"
-  },
-  "dependencies": {}
+    "typescript-json-schema": "^0.43.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^30.7.6",
+    "eslint-plugin-prefer-arrow": "^1.2.2",
+    "@angular-eslint/eslint-plugin": "0.8.0-beta.2",
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "link-parent-bin": "^2.0.0"
+  }
 }

@@ -1,7 +1,7 @@
 import { Column, Entity, Index, ObjectIdColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
-import { Player as IPlayer } from 'src/common/model/player';
+import { Player as IPlayer } from '../common/model/player';
 
 @Entity()
 export class Player implements IPlayer {
@@ -20,13 +20,13 @@ export class Player implements IPlayer {
   @Column()
   avatar?: string;
 
-  x?: number;
-
-  y?: number;
-
   /** Room where the player is */
   @Index()
   @Column('varchar')
   @Exclude()
   roomId?: string;
+
+  x?: number;
+
+  y?: number;
 }

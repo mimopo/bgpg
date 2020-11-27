@@ -8,12 +8,14 @@ import { Room } from '../../model/room';
 export interface RoomActions {
   /**
    * Update a room data
+   *
    * @param room
    */
   update(room: Room): Room;
 
   /**
    * Changes the current game
+   *
    * @param gameUrl
    */
   changeGame(gameUrl: string): Game;
@@ -25,6 +27,7 @@ export interface RoomActions {
 
   /**
    * Accept player joining into the room
+   *
    * @param playerId
    */
   acceptPlayer(playerId: Player['id']): void;
