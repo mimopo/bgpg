@@ -29,7 +29,7 @@ describe('RoomResolver', () => {
         id: 'foo',
       },
     };
-    resolver.resolve(route, {} as any).subscribe((response) => {
+    resolver.resolve(route).subscribe((response) => {
       expect(response).toBe(room);
       done();
     });
