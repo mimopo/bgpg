@@ -4,7 +4,6 @@
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "me-dutour-mathieu.vscode-github-actions",
-    "ms-vscode.vscode-typescript-tslint-plugin",
     "redhat.vscode-yaml"
   ]
 }

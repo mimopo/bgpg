@@ -3,12 +3,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 
-import { MainGateway } from './main.gateway';
 import { Player } from '../entities/player.entity';
 import { PlayerService } from '../services/player/player.service';
 import { Room } from '../entities/room.entity';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
+import { MainGateway } from './main.gateway';
 
 jest.mock('../services/player/player.service');
 jest.mock('../services/room/room.service');

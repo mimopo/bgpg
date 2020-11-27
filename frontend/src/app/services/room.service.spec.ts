@@ -5,7 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { RoomService } from './room.service';
 import { SocketService } from './socket.service';
 
-// tslint:disable-next-line: no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const joinFake: any = (e: string, id: string) => of({ id, name: 'name' });
 
 describe('RoomService', () => {

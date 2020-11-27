@@ -23,7 +23,7 @@ export class HomeComponent {
       .toPromise()
       .then((room) => this.router.navigate(['game', room.id]))
       .catch(() => {
-        this.error = "Can't create a room";
+        this.error = 'Can\'t create a room';
         this.submitting = false;
         return false;
       });

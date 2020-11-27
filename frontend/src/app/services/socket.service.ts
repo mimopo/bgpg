@@ -31,6 +31,7 @@ export class SocketService {
 
   /**
    * Listen to an event
+   *
    * @param event Event name
    * @link Events
    */
@@ -44,6 +45,7 @@ export class SocketService {
 
   /**
    * Sends an action to the server
+   *
    * @param action Action name
    * @param data Action arguments
    * @link Actions
@@ -53,7 +55,8 @@ export class SocketService {
   }
 
   /**
-   * Sends an action to the server and waits for response.
+   * Sends an action to the server and waits for response
+   *
    * @param action Action name
    * @param data Action arguments
    * @link Actions
@@ -61,7 +64,7 @@ export class SocketService {
   request<K extends keyof Actions, R = ReturnType<Actions[K]>>(action: K, ...data: Parameters<Actions[K]>): Observable<R> {
     const o = new Observable<R>((observer) => {
       this.socket.emit(`${action}`, ...data, (response: R | ErrorResponse) => {
-        if ((response as ErrorResponse).error) {
+        if (response as ErrorResponse.error) {
           observer.error(response);
         } else {
           observer.next(response as R);

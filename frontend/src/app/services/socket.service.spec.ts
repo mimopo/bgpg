@@ -18,10 +18,10 @@ describe('SocketService', () => {
       on: jasmine.createSpy(),
       off: jasmine.createSpy(),
       connected: true,
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     service = TestBed.inject(SocketService);
-    // tslint:disable-next-line: no-string-literal
+    // eslint-disable-next-line @typescript-eslint/dot-notation
     socket = service['socket'];
   });
 

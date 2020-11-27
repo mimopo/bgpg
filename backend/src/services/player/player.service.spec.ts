@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm/dist';
 
 import { Player } from '../../entities/player.entity';
-import { PlayerService } from './player.service';
 import { RepositoryMock } from '../../mocks/repository-mock';
+import { PlayerService } from './player.service';
 
 describe('PlayerService', () => {
   let service: PlayerService;

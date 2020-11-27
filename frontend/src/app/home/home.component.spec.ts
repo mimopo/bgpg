@@ -8,7 +8,7 @@ import { delay } from 'rxjs/operators';
 import { RoomService } from '../services/room.service';
 import { HomeComponent } from './home.component';
 
-// tslint:disable-next-line: no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const roomMock: any = { room: 'foo', name: 'bar' };
 
 describe('HomeComponent', () => {

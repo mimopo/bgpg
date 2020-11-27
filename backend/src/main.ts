@@ -1,6 +1,6 @@
-import { AppModule } from './app.module';
-import { NestFactory } from '@nestjs/core';
 import { join } from 'path';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 
 import { serveStaticFiles } from './serve-static-files';
 
