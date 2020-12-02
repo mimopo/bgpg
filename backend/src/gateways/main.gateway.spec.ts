@@ -8,6 +8,8 @@ import { PlayerService } from '../services/player/player.service';
 import { Room } from '../entities/room.entity';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
+import { JoinResponse } from '../common/model/join-response';
+
 import { MainGateway } from './main.gateway';
 
 jest.mock('../services/player/player.service');
@@ -114,8 +116,13 @@ describe('MainGateway', () => {
     });
   });
 
-  it('joinRoom: returns a Room', () => {
-    return expect(gateway.joinRoom(client, 'success')).resolves.toBeInstanceOf(Room);
+  it('joinRoom: returns a JoinResponse', () => {
+    jest.spyOn(module.get(PlayerService), 'findByRoomId').mockResolvedValue([new Player()]);
+    return expect(gateway.joinRoom(client, 'success')).resolves.toEqual<JoinResponse>({
+      players: expect.arrayContaining([expect.any(Player)]),
+      tokens: [],
+      room: expect.any(Room),
+    });
   });
 
   it('leaveRoom: throws exception if the player isnt in a room', () => {

@@ -1,7 +1,8 @@
 import { Game } from '../../model/game';
 import { ModelUpdate } from '../../types/model-update';
-import { Player } from '../../model/player';
 import { Room } from '../../model/room';
+import { JoinResponse } from '../../model/join-response';
+import { Player } from '../../model/player';
 
 /**
  * Available actions to perform outside the room
@@ -22,7 +23,7 @@ export interface MainActions {
    *
    * @param roomId
    */
-  joinRoom(roomId: Room['id']): Room;
+  joinRoom(roomId: Room['id']): JoinResponse;
 
   /**
    * List available games

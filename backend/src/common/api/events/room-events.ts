@@ -35,6 +35,13 @@ export interface RoomEvents {
   gameChanged(game: Game): void;
 
   /**
+   * Room name changed by another player
+   *
+   * @param game
+   */
+  nameChanged(game: Game): void;
+
+  /**
    * Log message
    *
    * @param message

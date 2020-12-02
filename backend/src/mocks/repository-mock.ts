@@ -8,7 +8,10 @@ export class RepositoryMock<T> {
     return entity;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async find(): Promise<void> {
+    // Mock this method
+  }
+
   async findOneOrFail(): Promise<void> {
     // Mock this method
   }

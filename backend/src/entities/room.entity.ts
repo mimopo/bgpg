@@ -2,6 +2,7 @@ import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { Transform, Type } from 'class-transformer';
 
 import { Room as IRoom } from '../common/model/room';
+import { Resource } from '../common/model/resource';
 
 @Entity()
 export class Room implements IRoom {
@@ -12,4 +13,7 @@ export class Room implements IRoom {
 
   @Column()
   name!: string;
+
+  @Column()
+  game?: Resource;
 }

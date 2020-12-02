@@ -1,3 +1,5 @@
+import { Resource } from './resource';
+
 /**
  * Room where the users joins and play games
  */
@@ -6,4 +8,6 @@ export interface Room {
   id: string;
   /** Room name */
   name: string;
+  /** Current game */
+  game?: Resource;
 }

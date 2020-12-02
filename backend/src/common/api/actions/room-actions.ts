@@ -11,7 +11,7 @@ export interface RoomActions {
    *
    * @param room
    */
-  update(room: Room): Room;
+  changeName(room: Room): Room;
 
   /**
    * Changes the current game

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm/repository/Repository';
 
 import { ModelUpdate } from '../../common/types/model-update';
 import { Player } from '../../entities/player.entity';
+import { toObjectId } from '../../utils/mongo-utils';
 
 @Injectable()
 export class PlayerService {
@@ -30,8 +31,12 @@ export class PlayerService {
     return this.repository.findOneOrFail({ id });
   }
 
+  async findByRoomId(roomId: string): Promise<Player[]> {
+    return this.repository.find({ where: { roomId: toObjectId(roomId) } });
+  }
+
   async joinRoom(player: Player, roomId: string): Promise<Player> {
-    player.roomId = roomId;
+    player.roomId = `${roomId}`;
     return this.repository.save(player);
   }
 

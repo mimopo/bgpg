@@ -1,7 +1,9 @@
+/** eslint import/order: ["error", {"newlines-between": "always"}] */
 import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
+import { classToPlain } from 'class-transformer';
 
 import { Game } from '../common/model/game';
 import { Gateway } from '../common/types/gateway';
@@ -13,6 +15,7 @@ import { Room } from '../common/model/room';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
 import { WsExceptionFilter } from '../filters/ws-exception.filter';
+import { JoinResponse } from '../common/model/join-response';
 
 /**
  * This Gateway handles the actions that can be performed outside of a room
@@ -38,18 +41,30 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
   @SubscribeMessage('createRoom')
   async createRoom(client: Socket): Promise<Room> {
     const room = await this.roomService.create();
+    const player = await this.playerService.find(client.id);
+    await this.playerService.joinRoom(player, room.id);
     await SocketUtils.join(client, room.id);
     return room;
   }
 
   @SubscribeMessage('joinRoom')
-  async joinRoom(client: Socket, roomId: string): Promise<Room> {
-    const room = await this.roomService.find(roomId);
-    const player = await this.playerService.find(client.id);
+  async joinRoom(client: Socket, roomId: string): Promise<JoinResponse> {
+    const [player, room, players, tokens] = await Promise.all([
+      this.playerService.find(client.id),
+      this.roomService.find(roomId),
+      this.playerService.findByRoomId(roomId),
+      Promise.resolve([]),
+    ]);
     await this.playerService.joinRoom(player, roomId);
     await SocketUtils.join(client, roomId);
     SocketUtils.emit(client.in(roomId), 'playerJoined', player);
-    return room;
+    return {
+      room,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      players: players.map((p) => classToPlain(p)) as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tokens: tokens.map((t) => classToPlain(t)) as any,
+    };
   }
 
   @SubscribeMessage('leaveRoom')

@@ -48,6 +48,11 @@ describe('PlayerService', () => {
     return expect(service.find('id')).rejects.toBeDefined();
   });
 
+  it('findByRoomId: returns an array of Players', () => {
+    jest.spyOn(repository, 'find').mockResolvedValue([new Player()]);
+    return expect(service.findByRoomId('id')).resolves.toEqual(expect.arrayContaining([expect.any(Player)]));
+  });
+
   it('joinRoom: assing a roomId to the Player', () => {
     const roomId = 'roomId';
     return expect(service.joinRoom(new Player(), roomId)).resolves.toHaveProperty('roomId', roomId);
