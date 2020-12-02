@@ -45,6 +45,7 @@ describe('MainGateway', () => {
     jest.spyOn(module.get(RoomService), 'find').mockResolvedValue(new Room());
     jest.spyOn(module.get(PlayerService), 'create').mockResolvedValue(new Player());
     jest.spyOn(module.get(PlayerService), 'find').mockResolvedValue(new Player());
+    jest.spyOn(module.get(PlayerService), 'findByRoomId').mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -116,10 +117,12 @@ describe('MainGateway', () => {
   });
 
   it('joinRoom: returns a JoinResponse', () => {
-    jest.spyOn(module.get(PlayerService), 'findByRoomId').mockResolvedValue([new Player()]);
+    const players = [new Player()];
+    const tokens: any[] = [];
+    jest.spyOn(module.get(PlayerService), 'findByRoomId').mockResolvedValue(players);
     return expect(gateway.joinRoom(client, 'success')).resolves.toEqual<JoinResponse>({
-      players: expect.arrayContaining([expect.any(Player)]),
-      tokens: [],
+      players,
+      tokens,
       room: expect.any(Room),
     });
   });

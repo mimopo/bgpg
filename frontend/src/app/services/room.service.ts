@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { Room } from 'bgpg/model/room';
 
@@ -26,9 +26,10 @@ export class RoomService {
     }
     return this.leave().pipe(
       switchMap(() => this.socket.request('joinRoom', id)),
-      tap((room) => {
-        this.room = room;
+      tap((response) => {
+        this.room = response.room;
       }),
+      map((r) => r.room),
     );
   }
 

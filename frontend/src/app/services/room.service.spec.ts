@@ -6,7 +6,7 @@ import { RoomService } from './room.service';
 import { SocketService } from './socket.service';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const joinFake: any = (e: string, id: string) => of({ id, name: 'name' });
+const joinFake: any = (e: string, id: string) => of({ room: { id, name: 'name' } });
 
 describe('RoomService', () => {
   let service: RoomService;
@@ -27,7 +27,7 @@ describe('RoomService', () => {
 
   it('join: returns a room', (done) => {
     const room = { id: 'foo', name: 'bar' };
-    socket.request.and.returnValue(of(room));
+    socket.request.and.returnValue(of({ room }));
     service.join('foo').subscribe((response) => {
       expect(response).toBe(room);
       done();
