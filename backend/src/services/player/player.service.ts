@@ -1,5 +1,5 @@
-import { InjectRepository } from '@nestjs/typeorm/dist/common';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm/dist/common';
 import { Repository } from 'typeorm/repository/Repository';
 
 import { ModelUpdate } from '../../common/types/model-update';

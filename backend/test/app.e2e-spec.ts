@@ -1,12 +1,12 @@
-import * as io from 'socket.io-client';
 import { INestApplication, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as io from 'socket.io-client';
 import { Connection } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
+import { JoinResponse } from '../src/common/model/join-response';
 import { Player } from '../src/common/model/player';
 import { Room } from '../src/common/model/room';
-import { JoinResponse } from '../src/common/model/join-response';
 
 const port = process.env.PORT || 3000;
 const client = () => io.connect(`http://localhost:${port}`, { transports: ['websocket'] });

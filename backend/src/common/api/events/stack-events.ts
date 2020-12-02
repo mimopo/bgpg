@@ -1,6 +1,6 @@
-import { ModelUpdate } from '../../types/model-update';
 import { Stack } from '../../model/stack';
 import { Token } from '../../model/token';
+import { ModelUpdate } from '../../types/model-update';
 
 /**
  * Available stack events to listen

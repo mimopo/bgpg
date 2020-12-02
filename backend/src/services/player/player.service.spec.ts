@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm/dist';
+import { Repository } from 'typeorm';
 
 import { Player } from '../../entities/player.entity';
 import { RepositoryMock } from '../../mocks/repository-mock';

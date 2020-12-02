@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as classTransformer from 'class-transformer';
-import { Player } from '../entities/player.entity';
 
+import { Player } from '../entities/player.entity';
 import { SocketUtils } from './socket-utils';
 
 describe('SocketUtils', () => {

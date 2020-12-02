@@ -1,8 +1,8 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { Transform, Type } from 'class-transformer';
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
-import { Room as IRoom } from '../common/model/room';
 import { Resource } from '../common/model/resource';
+import { Room as IRoom } from '../common/model/room';
 
 @Entity()
 export class Room implements IRoom {

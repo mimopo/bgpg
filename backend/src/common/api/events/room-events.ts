@@ -1,6 +1,6 @@
 import { Game } from '../../model/game';
-import { ModelUpdate } from '../../types/model-update';
 import { Player } from '../../model/player';
+import { ModelUpdate } from '../../types/model-update';
 
 /**
  * Available events to listen into the Room

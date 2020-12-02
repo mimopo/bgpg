@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 import { Room } from 'bgpg/model/room';
 
-import { switchMap, tap } from 'rxjs/operators';
 import { SocketService } from './socket.service';
 
 /**

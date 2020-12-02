@@ -1,5 +1,6 @@
-import { ServerResponse } from 'http';
 import { existsSync } from 'fs';
+import { ServerResponse } from 'http';
+
 import { INestApplication, Logger } from '@nestjs/common';
 import { static as st } from 'express';
 

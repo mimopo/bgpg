@@ -1,8 +1,8 @@
 import { Game } from '../../model/game';
-import { ModelUpdate } from '../../types/model-update';
-import { Room } from '../../model/room';
 import { JoinResponse } from '../../model/join-response';
 import { Player } from '../../model/player';
+import { Room } from '../../model/room';
+import { ModelUpdate } from '../../types/model-update';
 
 /**
  * Available actions to perform outside the room

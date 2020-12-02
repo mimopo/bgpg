@@ -1,5 +1,5 @@
-import { Column, Entity, Index, ObjectIdColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Column, Entity, Index, ObjectIdColumn } from 'typeorm';
 
 import { Player as IPlayer } from '../common/model/player';
 

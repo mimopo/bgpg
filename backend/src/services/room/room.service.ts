@@ -1,6 +1,6 @@
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Repository } from 'typeorm/repository/Repository';
 
 import { Room } from '../../entities/room.entity';

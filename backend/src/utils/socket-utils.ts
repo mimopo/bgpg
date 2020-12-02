@@ -1,5 +1,5 @@
-import { Namespace, Server, Socket } from 'socket.io';
 import { classToPlain } from 'class-transformer';
+import { Namespace, Server, Socket } from 'socket.io';
 
 import { Events } from '../common/api/events';
 

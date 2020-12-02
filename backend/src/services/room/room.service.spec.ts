@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm/dist/common/typeorm.utils';
+import { Repository } from 'typeorm';
 
-import { RepositoryMock } from '../../mocks/repository-mock';
 import { Room } from '../../entities/room.entity';
+import { RepositoryMock } from '../../mocks/repository-mock';
 import { RoomService } from './room.service';
 
 describe('findOneOrFailRoomService', () => {

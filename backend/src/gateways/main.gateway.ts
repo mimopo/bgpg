@@ -1,21 +1,21 @@
 /** eslint import/order: ["error", {"newlines-between": "always"}] */
 import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { classToPlain } from 'class-transformer';
+import { Server, Socket } from 'socket.io';
 
-import { Game } from '../common/model/game';
-import { Gateway } from '../common/types/gateway';
 import { MainActions } from '../common/api/actions/main-actions';
-import { ModelUpdate } from '../common/types/model-update';
+import { Game } from '../common/model/game';
+import { JoinResponse } from '../common/model/join-response';
 import { Player } from '../common/model/player';
-import { PlayerService } from '../services/player/player.service';
 import { Room } from '../common/model/room';
+import { Gateway } from '../common/types/gateway';
+import { ModelUpdate } from '../common/types/model-update';
+import { WsExceptionFilter } from '../filters/ws-exception.filter';
+import { PlayerService } from '../services/player/player.service';
 import { RoomService } from '../services/room/room.service';
 import { SocketUtils } from '../utils/socket-utils';
-import { WsExceptionFilter } from '../filters/ws-exception.filter';
-import { JoinResponse } from '../common/model/join-response';
 
 /**
  * This Gateway handles the actions that can be performed outside of a room
