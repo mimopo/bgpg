@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { RoomService } from '../services/room.service';
+
 import { RoomResolver } from './room.resolver';
 
 describe('RoomResolver', () => {
