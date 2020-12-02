@@ -19,8 +19,7 @@
     "start-frontend": "npm --prefix=frontend run start",
     "schema-game": "typescript-json-schema backend/src/common/model/game.ts Game --required -o schema/schema-game.json",
     "schema-shapes": "typescript-json-schema backend/src/common/model/game-shapes.ts GameShapes --required -o schema/schema-shape.json",
-    "schema-translation": "typescript-json-schema backend/src/common/model/game-translation.ts GameTranslation --required -o schema/schema-translation.json",
-    "postinstall": "link-parent-bin -c . --filter='+(frontend|backend)'"
+    "schema-translation": "typescript-json-schema backend/src/common/model/game-translation.ts GameTranslation --required -o schema/schema-translation.json"
   },
   "devDependencies": {
     "@compodoc/compodoc": "^1.1.11",

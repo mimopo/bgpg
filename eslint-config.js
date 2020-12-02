@@ -1,3 +1,6 @@
+/**
+ * ESLint config shared between projects
+ */
 module.exports = {
   plugins: ['@typescript-eslint/eslint-plugin', 'import'],
   extends: [
@@ -7,8 +10,6 @@ module.exports = {
     'plugin:@angular-eslint/ng-cli-compat--formatting-add-on',
     'eslint-config-prettier',
     'eslint-config-prettier/@typescript-eslint',
-    // 'plugin:jsdoc/recommended',
-    // 'plugin:import/errors',
   ],
   rules: {
     // disable some recommended rules
@@ -28,55 +29,24 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/no-empty-function': 'warn',
-    // 'import/order': 'error',
-    // 'import/no-unresolved': 'error',
-    'import/order': ['error', { 'newlines-between': 'always' }],
+    'import/order': [
+      'warn',
+      {
+        'newlines-between': 'always',
+        alphabetize: { order: 'asc' },
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+        pathGroups: [
+          {
+            pattern: 'bgpg/**',
+            group: 'internal',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+      },
+    ],
     'no-else-return': 'warn',
     complexity: ['warn', 10],
     eqeqeq: 'warn',
     yoda: 'warn',
   },
-  // overrides: [
-  //   {
-  //     files: ['backend/**/*.ts'],
-  //     parserOptions: {
-  //       project: __dirname + '/backend/tsconfig.json',
-  //       sourceType: 'module',
-  //     },
-  //     env: {
-  //       node: true,
-  //       jest: true,
-  //     },
-  //   },
-  //   // {
-  //   //   files: ['frontend/**/*.ts'],
-  //   //   parserOptions: {
-  //   //     project: ['frontend/tsconfig.json', 'frontend/e2e/tsconfig.json'],
-  //   //     createDefaultProgram: true,
-  //   //   },
-  //   //   extends: ['plugin:@angular-eslint/template/process-inline-templates'],
-  //   //   rules: {
-  //   //     '@angular-eslint/component-selector': [
-  //   //       'error',
-  //   //       {
-  //   //         type: 'element',
-  //   //         prefix: 'app',
-  //   //         style: 'kebab-case',
-  //   //       },
-  //   //     ],
-  //   //     '@angular-eslint/directive-selector': [
-  //   //       'error',
-  //   //       {
-  //   //         type: 'attribute',
-  //   //         prefix: 'app',
-  //   //         style: 'camelCase',
-  //   //       },
-  //   //     ],
-  //   //   },
-  //   // },
-  //   // {
-  //   //   files: ['frontend/**/*.html'],
-  //   //   extends: ['plugin:@angular-eslint/template/recommended'],
-  //   // },
-  // ],
 };
