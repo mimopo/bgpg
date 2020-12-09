@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm/dist';
+import { ObjectId } from 'mongodb';
 import { Repository } from 'typeorm';
 
 import { Player } from '../../entities/player.entity';
@@ -50,17 +51,17 @@ describe('PlayerService', () => {
 
   it('findByRoomId: returns an array of Players', () => {
     jest.spyOn(repository, 'find').mockResolvedValue([new Player()]);
-    return expect(service.findByRoomId('id')).resolves.toEqual(expect.arrayContaining([expect.any(Player)]));
+    return expect(service.findByRoomId(new ObjectId())).resolves.toEqual(expect.arrayContaining([expect.any(Player)]));
   });
 
   it('joinRoom: assing a roomId to the Player', () => {
-    const roomId = 'roomId';
+    const roomId = new ObjectId();
     return expect(service.joinRoom(new Player(), roomId)).resolves.toHaveProperty('roomId', roomId);
   });
 
   it('leaveRoom: removes the roomId from the Player', () => {
     const player = new Player();
-    player.roomId = 'roomId';
+    player.roomId = new ObjectId();
     jest.spyOn(repository, 'findOneOrFail').mockResolvedValue(player);
     return expect(service.leaveRoom(player)).resolves.toHaveProperty('roomId', undefined);
   });

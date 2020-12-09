@@ -1,5 +1,4 @@
 import { Game } from '../../model/game';
-import { JoinResponse } from '../../model/join-response';
 import { Player } from '../../model/player';
 import { Room } from '../../model/room';
 import { ModelUpdate } from '../../types/model-update';
@@ -23,7 +22,7 @@ export interface MainActions {
    *
    * @param roomId
    */
-  joinRoom(roomId: Room['id']): JoinResponse;
+  joinRoom(roomId: Room['id']): Room;
 
   /**
    * List available games

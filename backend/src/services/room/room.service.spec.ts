@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 
 import { Room } from '../../entities/room.entity';
 import { RepositoryMock } from '../../mocks/repository-mock';
+import { PlayerService } from '../player/player.service';
 import { RoomService } from './room.service';
+
+jest.mock('../player/player.service');
 
 describe('findOneOrFailRoomService', () => {
   let service: RoomService;
@@ -14,6 +17,7 @@ describe('findOneOrFailRoomService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RoomService,
+        PlayerService,
         {
           provide: getRepositoryToken(Room),
           useClass: RepositoryMock,

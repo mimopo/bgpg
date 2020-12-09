@@ -22,7 +22,7 @@ describe('RoomResolver', () => {
   });
 
   it('resolve: returns a room', (done) => {
-    const room = { id: 'foo', name: 'bar' };
+    const room: any = { id: 'foo', name: 'bar' };
     service.join.and.returnValue(of(room));
     const route: any = {
       params: {

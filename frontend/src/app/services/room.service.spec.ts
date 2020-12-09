@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -5,8 +6,7 @@ import { switchMap } from 'rxjs/operators';
 import { RoomService } from './room.service';
 import { SocketService } from './socket.service';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const joinFake: any = (e: string, id: string) => of({ room: { id, name: 'name' } });
+const joinFake: any = (e: string, id: string) => of({ id, name: 'name' });
 
 describe('RoomService', () => {
   let service: RoomService;
@@ -26,8 +26,8 @@ describe('RoomService', () => {
   });
 
   it('join: returns a room', (done) => {
-    const room = { id: 'foo', name: 'bar' };
-    socket.request.and.returnValue(of({ room }));
+    const room: any = { id: 'foo', name: 'bar' };
+    socket.request.and.returnValue(of(room));
     service.join('foo').subscribe((response) => {
       expect(response).toBe(room);
       done();
@@ -67,7 +67,8 @@ describe('RoomService', () => {
   });
 
   it('create: returns a room', (done) => {
-    const room = { id: 'foo', name: 'bar' };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const room: any = { id: 'foo', name: 'bar' };
     socket.request.and.returnValue(of(room));
     service.create().subscribe((response) => {
       expect(response).toBe(room);

@@ -1,15 +1,13 @@
-/** eslint import/order: ["error", {"newlines-between": "always"}] */
 import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
-import { classToPlain } from 'class-transformer';
 import { Server, Socket } from 'socket.io';
 
 import { MainActions } from '../common/api/actions/main-actions';
 import { Game } from '../common/model/game';
-import { JoinResponse } from '../common/model/join-response';
 import { Player } from '../common/model/player';
 import { Room } from '../common/model/room';
+import { EntityModel } from '../common/types/entity';
 import { Gateway } from '../common/types/gateway';
 import { ModelUpdate } from '../common/types/model-update';
 import { WsExceptionFilter } from '../filters/ws-exception.filter';
@@ -34,37 +32,26 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
   async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<void> {
     const player = await this.playerService.update(update);
     if (player.roomId) {
-      SocketUtils.emit(client.in(player.roomId), 'playerUpdated', update);
+      SocketUtils.emit(client.in(`${player.roomId}`), 'playerUpdated', update);
     }
   }
 
   @SubscribeMessage('createRoom')
-  async createRoom(client: Socket): Promise<Room> {
+  async createRoom(client: Socket): Promise<EntityModel<Room>> {
     const room = await this.roomService.create();
     const player = await this.playerService.find(client.id);
     await this.playerService.joinRoom(player, room.id);
-    await SocketUtils.join(client, room.id);
+    await SocketUtils.join(client, `${room.id}`);
     return room;
   }
 
   @SubscribeMessage('joinRoom')
-  async joinRoom(client: Socket, roomId: string): Promise<JoinResponse> {
-    const [player, room, players, tokens] = await Promise.all([
-      this.playerService.find(client.id),
-      this.roomService.find(roomId),
-      this.playerService.findByRoomId(roomId),
-      Promise.resolve([]),
-    ]);
-    await this.playerService.joinRoom(player, roomId);
+  async joinRoom(client: Socket, roomId: string): Promise<EntityModel<Room>> {
+    const [player, room] = await Promise.all([this.playerService.find(client.id), this.roomService.find(roomId)]);
+    await this.playerService.joinRoom(player, room.id);
     await SocketUtils.join(client, roomId);
     SocketUtils.emit(client.in(roomId), 'playerJoined', player);
-    return {
-      room,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      players: players.map((p) => classToPlain(p)) as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      tokens: tokens.map((t) => classToPlain(t)) as any,
-    };
+    return room;
   }
 
   @SubscribeMessage('leaveRoom')
@@ -75,8 +62,8 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
       throw new Error(`Player isn't in a room`);
     }
     await this.playerService.leaveRoom(player);
-    SocketUtils.emit(client.in(roomId), 'playerLeft', player.id);
-    return SocketUtils.leave(client, roomId);
+    SocketUtils.emit(client.in(`${roomId}`), 'playerLeft', player.id);
+    return SocketUtils.leave(client, `${roomId}`);
   }
 
   async handleConnection(client: Socket): Promise<void> {
@@ -90,7 +77,7 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
     try {
       const player = await this.playerService.find(client.id);
       if (player.roomId) {
-        SocketUtils.emit(client.in(player.roomId), 'playerLeft', player.id);
+        SocketUtils.emit(client.in(`${player.roomId}`), 'playerLeft', player.id);
       }
       await this.playerService.remove(player.id);
     } catch (e) {}

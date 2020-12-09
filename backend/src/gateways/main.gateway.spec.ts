@@ -2,8 +2,8 @@
 
 import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ObjectId } from 'mongodb';
 
-import { JoinResponse } from '../common/model/join-response';
 import { Player } from '../entities/player.entity';
 import { Room } from '../entities/room.entity';
 import { PlayerService } from '../services/player/player.service';
@@ -67,7 +67,7 @@ describe('MainGateway', () => {
   });
 
   it('handleDisconnect: emits playerLeft if its in a room', (done) => {
-    mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as Player);
+    mockPlayerServiceFind({ id: 'playerId', roomId: new ObjectId() } as Player);
     gateway.handleDisconnect(client).then(() => {
       expect(SocketUtils.emit).toHaveBeenLastCalledWith(undefined, 'playerLeft', 'playerId');
       done();
@@ -91,9 +91,10 @@ describe('MainGateway', () => {
 
   it('createRoom: joins into the Socket room', (done) => {
     const service = module.get(RoomService);
-    jest.spyOn(service, 'create').mockResolvedValue({ id: 'roomId' } as Room);
+    const roomId = new ObjectId();
+    jest.spyOn(service, 'create').mockResolvedValue({ id: roomId } as Room);
     gateway.createRoom(client).then(() => {
-      expect(SocketUtils.join).toBeCalledWith(client, 'roomId');
+      expect(SocketUtils.join).toBeCalledWith(client, `${roomId}`);
       done();
     });
   });
@@ -116,15 +117,9 @@ describe('MainGateway', () => {
     });
   });
 
-  it('joinRoom: returns a JoinResponse', () => {
-    const players = [new Player()];
-    const tokens: any[] = [];
-    jest.spyOn(module.get(PlayerService), 'findByRoomId').mockResolvedValue(players);
-    return expect(gateway.joinRoom(client, 'success')).resolves.toEqual<JoinResponse>({
-      players,
-      tokens,
-      room: expect.any(Room),
-    });
+  it('joinRoom: returns a Room', () => {
+    jest.spyOn(module.get(PlayerService), 'findByRoomId').mockResolvedValue([]);
+    return expect(gateway.joinRoom(client, 'success')).resolves.toEqual(expect.any(Room));
   });
 
   it('leaveRoom: throws exception if the player isnt in a room', () => {

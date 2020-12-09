@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist/common';
+import { ObjectId } from 'mongodb';
 import { Repository } from 'typeorm/repository/Repository';
 
 import { ModelUpdate } from '../../common/types/model-update';
 import { Player } from '../../entities/player.entity';
-import { toObjectId } from '../../utils/mongo-utils';
 
 @Injectable()
 export class PlayerService {
@@ -31,12 +31,12 @@ export class PlayerService {
     return this.repository.findOneOrFail({ id });
   }
 
-  async findByRoomId(roomId: string): Promise<Player[]> {
-    return this.repository.find({ where: { roomId: toObjectId(roomId) } });
+  async findByRoomId(roomId: ObjectId): Promise<Player[]> {
+    return this.repository.find({ roomId });
   }
 
-  async joinRoom(player: Player, roomId: string): Promise<Player> {
-    player.roomId = `${roomId}`;
+  async joinRoom(player: Player, roomId: ObjectId): Promise<Player> {
+    player.roomId = roomId;
     return this.repository.save(player);
   }
 

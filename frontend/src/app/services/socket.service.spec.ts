@@ -3,7 +3,6 @@ import * as io from 'socket.io-client';
 
 import { ErrorResponse } from 'bgpg/model/error-response';
 
-
 import { environment } from '../../environments/environment';
 import { SocketService } from './socket.service';
 
@@ -58,7 +57,8 @@ describe('SocketService', () => {
   });
 
   it('request: emit event data', (done) => {
-    const room = { id: 'id', name: 'name' };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const room: any = { id: 'id', name: 'name' };
     service.request('createRoom').subscribe((v) => {
       expect(v).toBe(room);
       done();

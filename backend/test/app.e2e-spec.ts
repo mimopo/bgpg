@@ -4,7 +4,6 @@ import * as io from 'socket.io-client';
 import { Connection } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
-import { JoinResponse } from '../src/common/model/join-response';
 import { Player } from '../src/common/model/player';
 import { Room } from '../src/common/model/room';
 
@@ -74,20 +73,17 @@ describe('MainGateway (e2e)', () => {
 
   it('creates a room', (done) => {
     client1.emit('createRoom', (room: Room) => {
-      expect(room).toEqual<Room>({ id: expect.any(String), name: expect.any(String) });
+      expect(room).toEqual<Room>({ id: expect.any(String), name: expect.any(String), players: [], tokens: [] });
       done();
     });
   });
 
-  fit('joins into a room', (done) => {
+  it('joins into a room', (done) => {
     client1.once('hello', (player: Player) => {
       client1.emit('createRoom', (created: Room) => {
-        client2.emit('joinRoom', created.id, (response: JoinResponse) => {
-          expect(response).toEqual({
-            room: created,
-            players: [player],
-            tokens: [],
-          });
+        client2.emit('joinRoom', created.id, (room: Room) => {
+          created.players = [player];
+          expect(room).toEqual(created);
           done();
         });
       });
