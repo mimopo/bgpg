@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 import * as io from 'socket.io-client';
@@ -7,16 +7,14 @@ import { Actions } from 'bgpg/api/actions';
 import { Events } from 'bgpg/api/events';
 import { ErrorResponse } from 'bgpg/model/error-response';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 /**
  * Connects to the server using Socket.IO
  * Use this service from other services, don't use it from components
  */
-@Injectable({
-  providedIn: 'root',
-})
-export class SocketService {
+@Injectable({ providedIn: 'any' })
+export class SocketService implements OnDestroy {
   private socket: SocketIOClient.Socket;
 
   /** Returns the connection status */
@@ -27,6 +25,10 @@ export class SocketService {
   constructor() {
     const options: SocketIOClient.ConnectOpts = environment.connectOptions;
     this.socket = io.connect(environment.server, options);
+  }
+
+  ngOnDestroy(): void {
+    this.socket.close();
   }
 
   /**
@@ -64,7 +66,7 @@ export class SocketService {
   request<K extends keyof Actions, R = ReturnType<Actions[K]>>(action: K, ...data: Parameters<Actions[K]>): Observable<R> {
     const o = new Observable<R>((observer) => {
       this.socket.emit(`${action}`, ...data, (response: R | ErrorResponse) => {
-        if ((response as ErrorResponse).error) {
+        if (response && (response as ErrorResponse).error) {
           observer.error(response);
         } else {
           observer.next(response as R);

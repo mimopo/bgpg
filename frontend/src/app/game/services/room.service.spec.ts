@@ -61,7 +61,7 @@ describe('RoomService', () => {
         }),
       )
       .subscribe(() => {
-        expect(socket.request.calls.first().args).toEqual(['leave']);
+        expect(socket.request.calls.first().args).toEqual(['leaveRoom']);
         done();
       });
   });
@@ -87,7 +87,7 @@ describe('RoomService', () => {
         }),
       )
       .subscribe(() => {
-        expect(socket.request.calls.first().args).toEqual(['leave']);
+        expect(socket.request.calls.first().args).toEqual(['leaveRoom']);
         done();
       });
   });
@@ -98,7 +98,7 @@ describe('RoomService', () => {
       .join('baz')
       .pipe(switchMap(() => service.leave()))
       .subscribe(() => {
-        expect(socket.request.calls.mostRecent().args).toEqual(['leave']);
+        expect(socket.request.calls.mostRecent().args).toEqual(['leaveRoom']);
         done();
       });
   });

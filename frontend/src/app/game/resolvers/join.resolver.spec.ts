@@ -3,17 +3,17 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { RoomService } from '../services/room.service';
-import { RoomResolver } from './room.resolver';
+import { JoinResolver } from './join.resolver';
 
 describe('RoomResolver', () => {
-  let resolver: RoomResolver;
+  let resolver: JoinResolver;
   let service: jasmine.SpyObj<RoomService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RoomResolver, { provide: RoomService, useValue: jasmine.createSpyObj('RoomService', ['join']) }],
+      providers: [JoinResolver, { provide: RoomService, useValue: jasmine.createSpyObj('RoomService', ['join']) }],
     });
-    resolver = TestBed.inject(RoomResolver);
+    resolver = TestBed.inject(JoinResolver);
     service = TestBed.inject(RoomService) as jasmine.SpyObj<RoomService>;
   });
 

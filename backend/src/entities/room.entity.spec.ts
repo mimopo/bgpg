@@ -3,7 +3,7 @@ import { classToPlain, plainToClass } from 'class-transformer';
 import { Room as RoomDto } from '../common/model/room';
 import { Room } from './room.entity';
 
-fdescribe('MainGateway', () => {
+describe('MainGateway', () => {
   it('serialization', () => {
     const plain: Required<RoomDto> = {
       id: '5fca83864eafd25e47a3200d',

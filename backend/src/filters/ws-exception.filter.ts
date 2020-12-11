@@ -20,10 +20,17 @@ export class WsExceptionFilter<T> extends BaseWsExceptionFilter {
     let error: ErrorResponse;
     if (exception instanceof BadRequestException) {
       const response = exception.getResponse() as { message: string[] };
-      error = {
-        error: ErrorEnum.validation,
-        message: response.message.map((m: string) => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') + '.',
-      };
+      try {
+        error = {
+          error: ErrorEnum.validation,
+          message: response.message.map((m: string) => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') + '.',
+        };
+      } catch (e) {
+        error = {
+          error: ErrorEnum.validation,
+          message: `${exception}`,
+        };
+      }
     } else {
       let message = 'Internal Server Error';
       if (exception instanceof WsException || exception instanceof EntityNotFoundError) {

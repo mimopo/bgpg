@@ -2,9 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { GameComponent } from './game.component';
-import { RoomResolver } from './room.resolver';
+import { LeaveGuard } from './guards/leave.guard';
+import { CreateResolver } from './resolvers/create.resolver';
+import { JoinResolver } from './resolvers/join.resolver';
 
-const routes: Routes = [{ path: '', component: GameComponent, resolve: { room: RoomResolver } }];
+const routes: Routes = [
+  { path: 'create', component: GameComponent, resolve: { room: CreateResolver } },
+  { path: ':id', component: GameComponent, resolve: { room: JoinResolver }, canDeactivate: [LeaveGuard] },
+  { path: '**', redirectTo: '/' },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

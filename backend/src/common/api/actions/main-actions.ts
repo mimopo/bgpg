@@ -10,7 +10,7 @@ export interface MainActions {
   /**
    * Updates the player's data
    */
-  updatePlayer(player: ModelUpdate<Player>): void;
+  updatePlayer(player: ModelUpdate<Player>): boolean;
 
   /**
    * Create an empty room

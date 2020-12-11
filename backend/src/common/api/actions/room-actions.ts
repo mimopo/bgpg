@@ -23,12 +23,12 @@ export interface RoomActions {
   /**
    * Leave room
    */
-  leave(): void;
+  leaveRoom(): boolean;
 
   /**
    * Accept player joining into the room
    *
    * @param playerId
    */
-  acceptPlayer(playerId: Player['id']): void;
+  acceptPlayer(playerId: Player['id']): boolean;
 }

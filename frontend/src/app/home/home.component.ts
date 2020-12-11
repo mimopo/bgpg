@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { RoomService } from '../services/room.service';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -13,20 +11,16 @@ export class HomeComponent {
   public roomId = '';
   public error = '';
 
-  constructor(private roomService: RoomService, private router: Router) {}
+  constructor(private router: Router) {}
 
   create(): Promise<boolean> {
     this.submitting = true;
     this.error = '';
-    return this.roomService
-      .create()
-      .toPromise()
-      .then((room) => this.router.navigate(['game', room.id]))
-      .catch(() => {
-        this.error = 'Can\'t create a room';
-        this.submitting = false;
-        return false;
-      });
+    return this.router.navigate(['game', 'create']).catch(() => {
+      this.error = "Can't create a room";
+      this.submitting = false;
+      return false;
+    });
   }
 
   join(id: string): Promise<boolean> {

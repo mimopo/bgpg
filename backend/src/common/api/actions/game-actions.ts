@@ -27,7 +27,7 @@ export interface GameActions {
    * @param x Horizontal position
    * @param y Vertical position
    */
-  move(tokenId: Token['id'], x: number, y: number): void;
+  move(tokenId: Token['id'], x: number, y: number): boolean;
 
   /**
    * Rotate token
@@ -35,5 +35,5 @@ export interface GameActions {
    * @param tokenId
    * @param degrees Rotation status in degrees, from 0 to 359
    */
-  rotate(tokenId: Token['id'], degrees: number): void;
+  rotate(tokenId: Token['id'], degrees: number): boolean;
 }

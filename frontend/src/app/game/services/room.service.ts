@@ -9,13 +9,15 @@ import { SocketService } from './socket.service';
 /**
  * Manages the room connection
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'any' })
 export class RoomService {
   private room?: Room;
 
   constructor(private socket: SocketService) {}
+
+  getRoom(): Room | undefined {
+    return this.room;
+  }
 
   /**
    * Join into a room. It leaves the current room before.
@@ -47,11 +49,11 @@ export class RoomService {
   /**
    * Leaves the current room
    */
-  leave(): Observable<void> {
+  leave(): Observable<boolean> {
     if (!this.room) {
-      return of(undefined);
+      return of(true);
     }
-    return this.socket.request('leave').pipe(
+    return this.socket.request('leaveRoom').pipe(
       tap(() => {
         this.room = undefined;
       }),

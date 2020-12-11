@@ -2,7 +2,16 @@
   <h2>Join:</h2>
   <form #form="ngForm" (ngSubmit)="join(roomId)" id="join-form">
     <label for="join-form-id">Room id:</label>
-    <input type="text" id="join-form-id" [(ngModel)]="roomId" [disabled]="submitting" name="roomId" required minlength="6" />
+    <input
+      [(ngModel)]="roomId"
+      [disabled]="submitting"
+      id="join-form-id"
+      maxlength="24"
+      minlength="24"
+      name="roomId"
+      required
+      type="text"
+    />
     <button id="join-button" type="submit" [disabled]="form.invalid || submitting">join</button>
   </form>
 </div>

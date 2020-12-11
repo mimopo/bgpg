@@ -2,7 +2,7 @@
  * ESLint config shared between projects
  */
 module.exports = {
-  plugins: ['@typescript-eslint/eslint-plugin', 'import'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'ban', 'import'],
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -29,6 +29,18 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/no-empty-function': 'warn',
+    complexity: ['warn', 10],
+    eqeqeq: 'warn',
+    yoda: 'warn',
+    'ban/ban': [
+      'warn',
+      { name: ['describe', 'only'], message: "don't focus tests" },
+      { name: 'fdescribe', message: "don't focus tests" },
+      { name: ['it', 'only'], message: "don't focus tests" },
+      { name: 'fit', message: "don't focus tests" },
+      { name: ['test', 'only'], message: "don't focus tests" },
+      { name: 'ftest', message: "don't focus tests" },
+    ],
     'import/order': [
       'warn',
       {
@@ -45,8 +57,5 @@ module.exports = {
       },
     ],
     'no-else-return': 'warn',
-    complexity: ['warn', 10],
-    eqeqeq: 'warn',
-    yoda: 'warn',
   },
 };

@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 
 import { ErrorResponse } from 'bgpg/model/error-response';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { SocketService } from './socket.service';
 
 describe('SocketService', () => {

@@ -1,4 +1,12 @@
-import { ClassSerializerInterceptor, Logger, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  ClassSerializerInterceptor,
+  Logger,
+  UseFilters,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-message.decorator';
 import { Server, Socket } from 'socket.io';
@@ -29,11 +37,12 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
   constructor(private roomService: RoomService, private playerService: PlayerService) {}
 
   @SubscribeMessage('updatePlayer')
-  async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<void> {
+  async updatePlayer(client: Socket, update: ModelUpdate<Player>): Promise<boolean> {
     const player = await this.playerService.update(update);
     if (player.roomId) {
       SocketUtils.emit(client.in(`${player.roomId}`), 'playerUpdated', update);
     }
+    return true;
   }
 
   @SubscribeMessage('createRoom')
@@ -55,15 +64,16 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
   }
 
   @SubscribeMessage('leaveRoom')
-  async leaveRoom(client: Socket): Promise<void> {
+  async leaveRoom(client: Socket): Promise<boolean> {
     const player = await this.playerService.find(client.id);
     const roomId = player.roomId;
     if (!roomId) {
-      throw new Error(`Player isn't in a room`);
+      throw new BadRequestException(`Player isn't in a room`);
     }
     await this.playerService.leaveRoom(player);
     SocketUtils.emit(client.in(`${roomId}`), 'playerLeft', player.id);
-    return SocketUtils.leave(client, `${roomId}`);
+    await SocketUtils.leave(client, `${roomId}`);
+    return true;
   }
 
   async handleConnection(client: Socket): Promise<void> {

@@ -17,5 +17,5 @@ export interface HandActions {
    *
    * @param playerId
    */
-  pushToken(playerId: Player['id'], token: Token): void;
+  pushToken(playerId: Player['id'], token: Token): boolean;
 }

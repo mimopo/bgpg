@@ -122,6 +122,11 @@ describe('MainGateway', () => {
     return expect(gateway.joinRoom(client, 'success')).resolves.toEqual(expect.any(Room));
   });
 
+  it('leaveRoom: returns true', () => {
+    mockPlayerServiceFind({ id: 'playerId', roomId: 'roomId' } as any);
+    return expect(gateway.leaveRoom(client)).resolves.toBe(true);
+  });
+
   it('leaveRoom: throws exception if the player isnt in a room', () => {
     return expect(gateway.leaveRoom(client)).rejects.toBeDefined();
   });
@@ -155,10 +160,10 @@ describe('MainGateway', () => {
     return expect(gateway.getGames(client)).rejects.toBeDefined();
   });
 
-  it('updatePlayer: returns void', async () => {
+  it('updatePlayer: returns true', async () => {
     const service = module.get(PlayerService);
     jest.spyOn(service, 'update').mockResolvedValue(new Player());
-    return expect(gateway.updatePlayer(client, { id: 'foo', name: 'bar' })).resolves.toBeFalsy();
+    return expect(gateway.updatePlayer(client, { id: 'foo', name: 'bar' })).resolves.toBe(true);
   });
 
   it('updatePlayer: emits player updated if player is in a room', (done) => {
