@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 import * as io from 'socket.io-client';
 
 import { Actions } from 'bgpg/api/actions';
 import { Events } from 'bgpg/api/events';
 import { ErrorResponse } from 'bgpg/model/error-response';
+import { Player } from 'bgpg/model/player';
 
 import { environment } from '../../../environments/environment';
 
@@ -16,18 +17,25 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'any' })
 export class SocketService implements OnDestroy {
   private socket: SocketIOClient.Socket;
+  private player$ = new ReplaySubject<Player>(1);
 
   /** Returns the connection status */
   get connected(): boolean {
     return this.socket.connected;
   }
 
+  get player(): Observable<Player> {
+    return this.player$.asObservable();
+  }
+
   constructor() {
     const options: SocketIOClient.ConnectOpts = environment.connectOptions;
     this.socket = io.connect(environment.server, options);
+    this.socket.on('hello', (p: Player) => this.player$.next(p));
   }
 
   ngOnDestroy(): void {
+    this.socket.removeAllListeners();
     this.socket.close();
   }
 
