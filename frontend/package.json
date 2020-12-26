@@ -9,6 +9,9 @@
     "url": "https://github.com/mimopo/bgpg.git",
     "directory": "frontend"
   },
+  "engines": {
+    "node": "^12.16.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -42,7 +45,7 @@
     "@angular/compiler-cli": "~11.0.2",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "^12.11.1",
+    "@types/node": "^14.14.16",
     "@types/socket.io-client": "^1.4.34",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",

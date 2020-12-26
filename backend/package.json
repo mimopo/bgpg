@@ -9,6 +9,9 @@
     "url": "https://github.com/mimopo/bgpg.git",
     "directory": "backend"
   },
+  "engines": {
+    "node": "^14.14.0"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build -p tsconfig.prod.json",
@@ -22,9 +25,6 @@
     "test-watch": "jest --watch",
     "test-debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test-e2e": "jest --config ./test/jest-e2e.json"
-  },
-  "engines": {
-    "node": "^12.16.0"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.4",
@@ -51,7 +51,7 @@
     "@types/jest": "26.0.10",
     "@types/lodash": "^4.14.161",
     "@types/mongodb": "^3.5.34",
-    "@types/node": "^13.9.1",
+    "@types/node": "^14.14.16",
     "@types/socket.io": "^2.1.11",
     "@types/socket.io-client": "^1.4.34",
     "@types/supertest": "^2.0.8",
