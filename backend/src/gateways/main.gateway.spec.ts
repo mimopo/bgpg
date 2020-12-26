@@ -61,7 +61,7 @@ describe('MainGateway', () => {
 
   it('handleConnection: emits hello', (done) => {
     gateway.handleConnection(client).then(() => {
-      expect(SocketUtils.emit).toHaveBeenLastCalledWith(null, 'hello', expect.any(Player));
+      expect(SocketUtils.emit).toHaveBeenLastCalledWith(client, 'hello', expect.any(Player));
       done();
     });
   });

@@ -79,7 +79,7 @@ export class MainGateway implements OnGatewayConnection, OnGatewayDisconnect, Ga
   async handleConnection(client: Socket): Promise<void> {
     this.logger.verbose(`Client connected    - ${client.id}`);
     const player = await this.playerService.create(client.id);
-    SocketUtils.emit(this.server, 'hello', player);
+    SocketUtils.emit(client, 'hello', player);
   }
 
   async handleDisconnect(client: Socket): Promise<void> {
