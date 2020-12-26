@@ -4,15 +4,20 @@ import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Repository } from 'typeorm/repository/Repository';
 
 import { Room } from '../../entities/room.entity';
+import { NameService } from '../name/name.service';
 import { PlayerService } from '../player/player.service';
 
 @Injectable()
 export class RoomService {
-  constructor(@InjectRepository(Room) private readonly repository: Repository<Room>, private readonly playerService: PlayerService) {}
+  constructor(
+    @InjectRepository(Room) private readonly repository: Repository<Room>,
+    private readonly playerService: PlayerService,
+    private nameService: NameService,
+  ) {}
 
   create(): Promise<Room> {
     const room = new Room();
-    room.name = Math.random() + '';
+    room.name = this.nameService.generateName();
     return this.repository.save(room);
   }
 

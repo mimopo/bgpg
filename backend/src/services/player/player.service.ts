@@ -5,14 +5,15 @@ import { Repository } from 'typeorm/repository/Repository';
 
 import { ModelUpdate } from '../../common/types/model-update';
 import { Player } from '../../entities/player.entity';
+import { NameService } from '../name/name.service';
 
 @Injectable()
 export class PlayerService {
-  constructor(@InjectRepository(Player) private readonly repository: Repository<Player>) {}
+  constructor(@InjectRepository(Player) private readonly repository: Repository<Player>, private nameService: NameService) {}
 
   async create(socketId: string): Promise<Player> {
     const player = new Player();
-    player.name = Math.random() + '';
+    player.name = this.nameService.generateName();
     player.id = socketId;
     return this.repository.save(player);
   }

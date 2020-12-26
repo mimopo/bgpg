@@ -5,7 +5,10 @@ import { Repository } from 'typeorm';
 
 import { Player } from '../../entities/player.entity';
 import { RepositoryMock } from '../../mocks/repository-mock';
+import { NameService } from '../name/name.service';
 import { PlayerService } from './player.service';
+
+jest.mock('../name/name.service');
 
 describe('PlayerService', () => {
   let service: PlayerService;
@@ -15,6 +18,7 @@ describe('PlayerService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PlayerService,
+        NameService,
         {
           provide: getRepositoryToken(Player),
           useClass: RepositoryMock,
